@@ -13,8 +13,19 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
+
+    AddDayReport(int index);
+    DelDayReport(int index);
+    EditDayReport(int index);
+
     ~MainWindow();
 
+private slots:
+
+    void on_pushButton_2_clicked();
+    
+protected:
+    void resizeEvent(QResizeEvent *event);
 private:
     Ui::MainWindow *ui;
 };

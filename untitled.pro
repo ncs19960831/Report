@@ -27,14 +27,17 @@ CONFIG += c++11
 SOURCES += \
         dayreport.cpp \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        uidayreport.cpp
 
 HEADERS += \
         dayreport.h \
-        mainwindow.h
+        mainwindow.h \
+        uidayreport.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+        uidayreport.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
