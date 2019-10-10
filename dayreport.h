@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QWidget>
 #include <QString>
+#include <QDateTime>
 
 
 
@@ -20,8 +21,8 @@ public:
         QString Target;     //目标
         QString Process;    //实际进行
         QString Diff;       //差异以及改善
-        QString StartTime;  //开始时间
-        QString EndTime;    //结束时间
+        QDateTime StartTime;  //开始时间
+        QDateTime EndTime;    //结束时间
         QString Priority;   //权重（优先级）
         QString Evaluate;   //评估
     };
@@ -30,7 +31,7 @@ public:
 
     explicit DayReport(QString number);
 
-    explicit DayReport( QString Product, QString Case, QString Target, QString Process, QString Diff, QString StartTime, QString EndTime, QString Priority, QString Evaluate,QString Number = nullptr);    bool SetNumber(QString string);
+    explicit DayReport( QString Product, QString Case, QString Target, QString Process, QString Diff, QDateTime StartTime, QDateTime EndTime, QString Priority, QString Evaluate,QString Number = nullptr);    bool SetNumber(QString string);
     bool GetNember(QString* string);
     bool SetProduct(QString string);
     bool GetProduct(QString* string);
@@ -42,10 +43,10 @@ public:
     bool GetProcess(QString* string);
     bool SetDiff(QString string);
     bool GetDiff(QString* string);
-    bool SetStartTime(QString string);
-    bool GetStartTime(QString* string);
-    bool SetEndTime(QString string);
-    bool GetEndTime(QString* string);
+    bool SetStartTime(QDateTime * string);
+    bool GetStartTime(QDateTime* string);
+    bool SetEndTime(QDateTime string);
+    bool GetEndTime(QDateTime* string);
     bool SetPriority(QString string);
     bool GetPriority(QString* string);
     bool SetEvaluate(QString string);

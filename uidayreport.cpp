@@ -48,10 +48,24 @@ DayReport * uidayreport::GetReport()
     return thisDayReport;
 }
 
+QString * uidayreport::SelfRead(QString* InputString)
+{
+
+}
+
+QDateTime * uidayreport::SelfRead(QDateTime Time)
+{
+
+}
+
 void uidayreport::FinishReport()
 {
     qDebug()<<ui->CaseText->currentText();
-    thisDayReport->SetCase(ui->CaseText->currentText());
+
+  //  thisDayReport->SetCase(this->SelfRead(ui->CaseText->currentText()));
+    thisDayReport->SetProduct(this->SelfRead(ui->ProductText))
+//    thisDayReport->SetTarget(this->SelfRead(ui->TargetText->text()));
+ //   thisDayReport->SetStartTime(this->SelfRead(ui->StartTimeText->dateTime()));
 }
 
 void uidayreport::Accept()

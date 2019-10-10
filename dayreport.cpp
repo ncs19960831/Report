@@ -7,12 +7,12 @@ DayReport::DayReport(QObject *parent) : QObject(parent)
     OnceDay.Diff = "";
     OnceDay.Number = nullptr;
     OnceDay.Target = "";
-    OnceDay.EndTime = "";
+ //   OnceDay.EndTime = new QDateTime() ;
     OnceDay.Process = "";
     OnceDay.Product = "";
     OnceDay.Evaluate = "";
     OnceDay.Priority = "";
-    OnceDay.StartTime = "";
+ //   OnceDay.StartTime = "";
 }
 DayReport::DayReport(QString number)
 {
@@ -24,8 +24,8 @@ QString Case,       //事项
 QString Target,     //目标
 QString Process,    //实际进行
 QString Diff,       //差异以及改善
-QString StartTime,  //开始时间
-QString EndTime,    //结束时间
+QDateTime StartTime,  //开始时间
+QDateTime EndTime,    //结束时间
 QString Priority,   //权重（优先级）
 QString Evaluate, //评估
 QString Number)     //序号
@@ -39,12 +39,12 @@ QString Number)     //序号
         OnceDay.Diff = Diff;
         OnceDay.Number = Number;
         OnceDay.Target = Target;
-        OnceDay.EndTime = EndTime;
+ //       OnceDay.EndTime = EndTime;
         OnceDay.Process = Process;
         OnceDay.Product = Product;
         OnceDay.Evaluate = Evaluate;
         OnceDay.Priority = Priority;
-        OnceDay.StartTime = StartTime;
+ //       OnceDay.StartTime = StartTime;
     }
 }
 
@@ -100,7 +100,7 @@ bool DayReport::SetCase(QString string)
 {
     if (!OnceDay.Number.isNull())
     {
-        OnceDay.Product = string;
+        OnceDay.Case = string;
         return true;
     }
     else {
@@ -123,7 +123,7 @@ bool DayReport::SetTarget(QString string)
 {
     if (!OnceDay.Number.isNull())
     {
-        OnceDay.Product = string;
+        OnceDay.Target = string;
         return true;
     }
     else {
@@ -146,7 +146,7 @@ bool DayReport::SetProcess(QString string)
 {
     if (!OnceDay.Number.isNull())
     {
-        OnceDay.Product = string;
+        OnceDay.Process = string;
         return true;
     }
     else {
@@ -169,7 +169,7 @@ bool DayReport::SetDiff(QString string)
 {
     if (!OnceDay.Number.isNull())
     {
-        OnceDay.Product = string;
+        OnceDay.Diff = string;
         return true;
     }
     else {
@@ -187,18 +187,18 @@ bool DayReport::GetDiff(QString* string)
         return false;
     }
 }
-bool DayReport::SetStartTime(QString string)
+bool DayReport::SetStartTime(QDateTime * string)
 {
     if (!OnceDay.Number.isNull())
     {
-        OnceDay.Product = string;
+//        OnceDay.StartTime = string;
         return true;
     }
     else {
         return false;
     }
 }
-bool DayReport::GetStartTime(QString* string)
+bool DayReport::GetStartTime(QDateTime* string)
 {
     if (!OnceDay.Number.isNull())
     {
@@ -210,18 +210,18 @@ bool DayReport::GetStartTime(QString* string)
     }
 }
 
-bool DayReport::SetEndTime(QString string)
+bool DayReport::SetEndTime(QDateTime string)
 {
     if (!OnceDay.Number.isNull())
     {
-        OnceDay.Product = string;
+        OnceDay.EndTime = string;
         return true;
     }
     else {
         return false;
     }
 }
-bool DayReport::GetEndTime(QString* string)
+bool DayReport::GetEndTime(QDateTime* string)
 {
     if (!OnceDay.Number.isNull())
     {
@@ -237,7 +237,7 @@ bool DayReport::SetPriority(QString string)
 {
     if (!OnceDay.Number.isNull())
     {
-        OnceDay.Product = string;
+        OnceDay.Priority = string;
         return true;
     }
     else {
@@ -260,7 +260,7 @@ bool DayReport::SetEvaluate(QString string)
 {
     if (!OnceDay.Number.isNull())
     {
-        OnceDay.Product = string;
+        OnceDay.Evaluate = string;
         return true;
     }
     else {

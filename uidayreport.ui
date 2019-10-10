@@ -50,7 +50,7 @@
             <set>Qt::AlignHCenter|Qt::AlignTop</set>
            </property>
            <item row="0" column="1">
-            <widget class="QComboBox" name="ModelText">
+            <widget class="QComboBox" name="ProductText">
              <property name="editable">
               <bool>true</bool>
              </property>
@@ -98,7 +98,7 @@
             </widget>
            </item>
            <item row="0" column="0">
-            <widget class="QLabel" name="Model">
+            <widget class="QLabel" name="Product">
              <property name="text">
               <string>机型</string>
              </property>

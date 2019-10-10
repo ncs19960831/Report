@@ -111,7 +111,7 @@ int MainWindow::SetDayreportToItem(DayReport* Dayreport,int Row)
     Dayreport->GetTarget(string);
     TableWidgetItem->setText(*string);
 
-    Dayreport->GetEndTime(string);
+    //Dayreport->GetEndTime(string);
     TableWidgetItem->setText(*string);
     Dayreport->GetProcess(string);
     TableWidgetItem->setText(*string);
@@ -123,7 +123,7 @@ int MainWindow::SetDayreportToItem(DayReport* Dayreport,int Row)
 
     Dayreport->GetPriority(string);
     TableWidgetItem->setText(*string);
-    Dayreport->GetStartTime(string);
+    //Dayreport->GetStartTime(string);
     TableWidgetItem->setText(*string);
     TableWidget->setCurrentItem(TableWidgetItem);
 
