@@ -23,7 +23,7 @@ public:
     void FinishReport();
 
     void ResetConnect();
-    QString *SelfRead(QString *InputString);
+    QString SelfRead(QString InputString);
     QDateTime *SelfRead(QDateTime Time);
 private slots:
 

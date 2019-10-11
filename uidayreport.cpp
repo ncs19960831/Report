@@ -5,7 +5,7 @@
 #include <QDebug>
 
 static DayReport* thisDayReport;
-
+static QTextDocument *thisTextDocument;
 void uidayreport::ResetConnect()
 {
     QObject::connect(ui->WriteButton,SIGNAL(accepted()),this,SLOT(Accept()));
@@ -19,6 +19,8 @@ uidayreport::uidayreport(QWidget *parent) :
     ui(new Ui::uidayreport)
 {
     thisDayReport = new DayReport();
+    thisTextDocument = new QTextDocument();
+    ui->ProcessText->setDocument(thisTextDocument);
     this->WriteOk = false;
     ui->setupUi(this);
     ResetConnect();
@@ -29,6 +31,8 @@ uidayreport::uidayreport(DayReport * dayreport):
 {
     ui->setupUi(this);
     thisDayReport = dayreport;
+    thisTextDocument = new QTextDocument();
+    ui->ProcessText->setDocument(thisTextDocument);
     this->WriteOk = false;
     ResetConnect();
 }
@@ -48,7 +52,7 @@ DayReport * uidayreport::GetReport()
     return thisDayReport;
 }
 
-QString * uidayreport::SelfRead(QString* InputString)
+QString uidayreport::SelfRead(QString InputString)
 {
 
 }
@@ -61,11 +65,19 @@ QDateTime * uidayreport::SelfRead(QDateTime Time)
 void uidayreport::FinishReport()
 {
     qDebug()<<ui->CaseText->currentText();
+    //开始
+    thisDayReport->SetCase(this->SelfRead(ui->CaseText->currentText()));
+    thisDayReport->SetProduct(this->SelfRead(ui->ProductText->currentText()));
+    thisDayReport->SetTarget(this->SelfRead(ui->TargetText->text()));
+    thisDayReport->SetStartTime(this->SelfRead(ui->StartTimeText->dateTime()));
+    //中间
+    thisDayReport->SetProcess(this->SelfRead(ui->ProcessText->toPlainText()));
+    //结束
+    thisDayReport->SetEndTime(this->SelfRead(ui->CaseText->currentText()));
+    thisDayReport->SetPriority(this->SelfRead(ui->ProductText->currentText()));
+    thisDayReport->SetEvaluate(this->SelfRead(ui->TargetText->text()));
+    thisDayReport->SetDiff(this->SelfRead(ui->StartTimeText->dateTime()));
 
-  //  thisDayReport->SetCase(this->SelfRead(ui->CaseText->currentText()));
-    thisDayReport->SetProduct(this->SelfRead(ui->ProductText))
-//    thisDayReport->SetTarget(this->SelfRead(ui->TargetText->text()));
- //   thisDayReport->SetStartTime(this->SelfRead(ui->StartTimeText->dateTime()));
 }
 
 void uidayreport::Accept()
