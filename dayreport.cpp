@@ -3,16 +3,20 @@
 
 DayReport::DayReport(QObject *parent) : QObject(parent)
 {
+    QDate* DateNormal = new QDate(2000,1,1);
+    QTime* TimeNormal = new QTime(1,1,1,0);
+    QDateTime* DateTimeNormal =new QDateTime(DateNormal->currentDate(),TimeNormal->currentTime());
+
     OnceDay.Case = "";
     OnceDay.Diff = "";
     OnceDay.Number = nullptr;
     OnceDay.Target = "";
- //   OnceDay.EndTime = new QDateTime() ;
+    OnceDay.EndTime = DateTimeNormal->currentDateTime();
     OnceDay.Process = "";
     OnceDay.Product = "";
     OnceDay.Evaluate = "";
     OnceDay.Priority = "";
- //   OnceDay.StartTime = "";
+    OnceDay.StartTime = DateTimeNormal->currentDateTime();
 }
 DayReport::DayReport(QString number)
 {
@@ -30,6 +34,10 @@ QString Priority,   //权重（优先级）
 QString Evaluate, //评估
 QString Number)     //序号
 {
+    QDate* DateNormal = new QDate(2000,1,1);
+    QTime* TimeNormal = new QTime(1,1,1,0);
+    QDateTime* DateTimeNormal =new QDateTime(DateNormal->currentDate(),TimeNormal->currentTime());
+
     if (Number.isNull())
     {
         return;
@@ -39,12 +47,12 @@ QString Number)     //序号
         OnceDay.Diff = Diff;
         OnceDay.Number = Number;
         OnceDay.Target = Target;
- //       OnceDay.EndTime = EndTime;
+        OnceDay.EndTime = DateTimeNormal->currentDateTime();
         OnceDay.Process = Process;
         OnceDay.Product = Product;
         OnceDay.Evaluate = Evaluate;
         OnceDay.Priority = Priority;
- //       OnceDay.StartTime = StartTime;
+        OnceDay.StartTime = DateTimeNormal->currentDateTime();
     }
 }
 
@@ -210,11 +218,11 @@ bool DayReport::GetStartTime(QDateTime* string)
     }
 }
 
-bool DayReport::SetEndTime(QDateTime string)
+bool DayReport::SetEndTime(QDateTime * string)
 {
     if (!OnceDay.Number.isNull())
     {
-        OnceDay.EndTime = string;
+        OnceDay.EndTime = string->currentDateTime();
         return true;
     }
     else {

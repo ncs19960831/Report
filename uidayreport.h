@@ -1,7 +1,10 @@
 #ifndef UIDAYREPORT_H
 #define UIDAYREPORT_H
 
+#include <QComboBox>
 #include <QDialog>
+#include <QLineEdit>
+#include <QTextEdit>
 #include "dayreport.h"
 
 namespace Ui {
@@ -23,7 +26,6 @@ public:
     void FinishReport();
 
     void ResetConnect();
-    QString SelfRead(QString InputString);
     QDateTime *SelfRead(QDateTime Time);
 private slots:
 
@@ -32,6 +34,10 @@ private slots:
 private:
     bool WriteOk;
     Ui::uidayreport *ui;
+    QString SelfRead(QLineEdit* InputString);
+    QString SelfRead(QComboBox* InputString);
+    QString SelfRead(QTextEdit* InputString);
+    QDateTime *SelfRead(QDateTimeEdit* DateTime);
 };
 
 #endif // UIDAYREPORT_H

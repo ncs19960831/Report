@@ -19,8 +19,8 @@ uidayreport::uidayreport(QWidget *parent) :
     ui(new Ui::uidayreport)
 {
     thisDayReport = new DayReport();
-    thisTextDocument = new QTextDocument();
-    ui->ProcessText->setDocument(thisTextDocument);
+    thisTextDocument = new QTextDocument("");
+ //   ui->ProcessText;
     this->WriteOk = false;
     ui->setupUi(this);
     ResetConnect();
@@ -31,7 +31,7 @@ uidayreport::uidayreport(DayReport * dayreport):
 {
     ui->setupUi(this);
     thisDayReport = dayreport;
-    thisTextDocument = new QTextDocument();
+    thisTextDocument = new QTextDocument("");
     ui->ProcessText->setDocument(thisTextDocument);
     this->WriteOk = false;
     ResetConnect();
@@ -52,31 +52,63 @@ DayReport * uidayreport::GetReport()
     return thisDayReport;
 }
 
-QString uidayreport::SelfRead(QString InputString)
+QString uidayreport::SelfRead(QComboBox* InputString)
 {
+    QString String = "";
+    if (InputString->currentText() == nullptr)
+        return String;
+    if (InputString->currentText() == "")
+        return String;
+    qDebug()<<ui->CaseText->currentText();
 
 }
 
-QDateTime * uidayreport::SelfRead(QDateTime Time)
+QString uidayreport::SelfRead(QLineEdit* InputString)
 {
+    QString String = "";
+    if (InputString->text() == nullptr)
+        return String;
+    if (InputString->text() == "")
+        return String;
 
+}
+
+QString uidayreport::SelfRead(QTextEdit* InputString)
+{
+    QString String = "";
+    if (InputString->toPlainText() == nullptr)
+        return String;
+    if (InputString->toPlainText() == "")
+        return String;
+
+}
+
+QDateTime * uidayreport::SelfRead(QDateTimeEdit* DateTime)
+{
+    QDate* DateNormal = new QDate(2000,1,1);
+    QTime* TimeNormal = new QTime(1,1,1,0);
+    QDateTime* String =new QDateTime(DateNormal->currentDate(),TimeNormal->currentTime());
+
+    if (DateTime->dateTime().toString() == "")
+        return String;
+    if (DateTime->dateTime().isNull())
+        return String;
 }
 
 void uidayreport::FinishReport()
 {
-    qDebug()<<ui->CaseText->currentText();
     //开始
-    thisDayReport->SetCase(this->SelfRead(ui->CaseText->currentText()));
-    thisDayReport->SetProduct(this->SelfRead(ui->ProductText->currentText()));
-    thisDayReport->SetTarget(this->SelfRead(ui->TargetText->text()));
-    thisDayReport->SetStartTime(this->SelfRead(ui->StartTimeText->dateTime()));
+    thisDayReport->SetCase(this->SelfRead(ui->CaseText));
+    thisDayReport->SetProduct(this->SelfRead(ui->ProductText));
+    thisDayReport->SetTarget(this->SelfRead(ui->TargetText));
+    thisDayReport->SetStartTime(this->SelfRead(ui->StartTimeText));
     //中间
-    thisDayReport->SetProcess(this->SelfRead(ui->ProcessText->toPlainText()));
+    thisDayReport->SetProcess(this->SelfRead(ui->ProcessText));
     //结束
-    thisDayReport->SetEndTime(this->SelfRead(ui->CaseText->currentText()));
-    thisDayReport->SetPriority(this->SelfRead(ui->ProductText->currentText()));
-    thisDayReport->SetEvaluate(this->SelfRead(ui->TargetText->text()));
-    thisDayReport->SetDiff(this->SelfRead(ui->StartTimeText->dateTime()));
+    thisDayReport->SetEndTime(this->SelfRead(ui->EndTimeText));
+    thisDayReport->SetPriority(this->SelfRead(ui->ProductText));
+    thisDayReport->SetEvaluate(this->SelfRead(ui->TargetText));
+    thisDayReport->SetDiff(this->SelfRead(ui->DiffText));
 
 }
 

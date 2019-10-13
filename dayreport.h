@@ -45,7 +45,7 @@ public:
     bool GetDiff(QString* string);
     bool SetStartTime(QDateTime * string);
     bool GetStartTime(QDateTime* string);
-    bool SetEndTime(QDateTime string);
+    bool SetEndTime(QDateTime * string);
     bool GetEndTime(QDateTime* string);
     bool SetPriority(QString string);
     bool GetPriority(QString* string);
