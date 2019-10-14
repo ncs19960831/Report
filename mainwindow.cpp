@@ -106,7 +106,7 @@ int MainWindow::SetDayreportToItem(DayReport* Dayreport,int Row)
     Dayreport->GetDiff(string);
     TableWidgetItem->setText(*string);
 
-    Dayreport->GetNember(string);
+    Dayreport->GetNumber(string);
     TableWidgetItem->setText(*string);
     Dayreport->GetTarget(string);
     TableWidgetItem->setText(*string);
@@ -146,7 +146,8 @@ int MainWindow::GetItemToDayreport(DayReport* Dayreport,QString* DataString, int
 }
 int MainWindow::AddDayReport(int index)
 {
-    uidayreport * uidayreport = new class uidayreport();
+    uidayreport * uidayreport = new class uidayreport((unsigned int)index);
+    uidayreport->SetSelectIndex((unsigned int)index);
     uidayreport->exec();        //栓塞等待选择完成
     if (uidayreport->GetStatus())
     {
@@ -167,7 +168,7 @@ int MainWindow::EditDayReport(int index)
 {
     DayReport* Dayreport =new DayReport();
     QString* DataString= new QString();
-    uidayreport * uidayreport = new class uidayreport();
+    uidayreport * uidayreport = new class uidayreport((unsigned int)index);
     uidayreport->show();
     QTableWidget* MainTableWidget = ui->MainTableWidget;
     int Row = MainTableWidget->currentRow();

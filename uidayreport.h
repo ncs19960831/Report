@@ -18,15 +18,18 @@ class uidayreport : public QDialog
 public:
 
     explicit uidayreport(QWidget *parent = nullptr);
+    explicit uidayreport(unsigned int Index,QWidget *parent = nullptr);
     ~uidayreport();
 
-    explicit uidayreport(DayReport * dayreport);
+    explicit uidayreport(DayReport * dayreport,unsigned int Index);
     bool GetStatus();
     DayReport *GetReport();
     void FinishReport();
 
+    void SetSelectIndex(unsigned int Index);
     void ResetConnect();
     QDateTime *SelfRead(QDateTime Time);
+
 private slots:
 
     void Accept();

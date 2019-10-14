@@ -67,7 +67,7 @@ bool DayReport::SetNumber(QString string)
         return false;
     }
 }
-bool DayReport::GetNember(QString* string)
+bool DayReport::GetNumber(QString* string)
 {
     if (!OnceDay.Number.isNull())
     {
@@ -199,7 +199,7 @@ bool DayReport::SetStartTime(QDateTime * string)
 {
     if (!OnceDay.Number.isNull())
     {
-//        OnceDay.StartTime = string;
+        OnceDay.StartTime = string->currentDateTime();
         return true;
     }
     else {

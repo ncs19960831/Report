@@ -5,7 +5,7 @@
 #include <QDebug>
 
 static DayReport* thisDayReport;
-static QTextDocument *thisTextDocument;
+static unsigned int thisSelectIndex;
 void uidayreport::ResetConnect()
 {
     QObject::connect(ui->WriteButton,SIGNAL(accepted()),this,SLOT(Accept()));
@@ -13,26 +13,33 @@ void uidayreport::ResetConnect()
     QObject::connect(ui->WriteButton_3,SIGNAL(accepted()),this,SLOT(Accept()));
 }
 
+void uidayreport::SetSelectIndex(unsigned int Index)
+{
+    thisSelectIndex = Index;
+    thisDayReport = new DayReport(QString(thisSelectIndex)) ;
+}
 
-uidayreport::uidayreport(QWidget *parent) :
+uidayreport::uidayreport(unsigned int Index,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::uidayreport)
 {
-    thisDayReport = new DayReport();
-    thisTextDocument = new QTextDocument("");
- //   ui->ProcessText;
+    thisDayReport = new DayReport(QString(Index));
+    thisSelectIndex = Index;
     this->WriteOk = false;
     ui->setupUi(this);
     ResetConnect();
 }
 
-uidayreport::uidayreport(DayReport * dayreport):
+uidayreport::uidayreport(DayReport * dayreport,unsigned int Index):
     ui(new Ui::uidayreport)
 {
     ui->setupUi(this);
     thisDayReport = dayreport;
-    thisTextDocument = new QTextDocument("");
-    ui->ProcessText->setDocument(thisTextDocument);
+    thisSelectIndex = Index;
+    if (thisDayReport->GetNumber(new QString()) == false)
+    {
+        thisDayReport = new DayReport(QString(Index));
+    }
     this->WriteOk = false;
     ResetConnect();
 }
@@ -59,7 +66,8 @@ QString uidayreport::SelfRead(QComboBox* InputString)
         return String;
     if (InputString->currentText() == "")
         return String;
-    qDebug()<<ui->CaseText->currentText();
+    String = InputString->currentText();
+    return String;
 
 }
 
@@ -70,7 +78,8 @@ QString uidayreport::SelfRead(QLineEdit* InputString)
         return String;
     if (InputString->text() == "")
         return String;
-
+    String = InputString->text();
+    return String;
 }
 
 QString uidayreport::SelfRead(QTextEdit* InputString)
@@ -80,7 +89,7 @@ QString uidayreport::SelfRead(QTextEdit* InputString)
         return String;
     if (InputString->toPlainText() == "")
         return String;
-
+    String = InputString->toPlainText();//暂时不选择显示图片
 }
 
 QDateTime * uidayreport::SelfRead(QDateTimeEdit* DateTime)
@@ -97,6 +106,8 @@ QDateTime * uidayreport::SelfRead(QDateTimeEdit* DateTime)
 
 void uidayreport::FinishReport()
 {
+    //序号
+    thisDayReport->SetNumber(QString(thisSelectIndex));
     //开始
     thisDayReport->SetCase(this->SelfRead(ui->CaseText));
     thisDayReport->SetProduct(this->SelfRead(ui->ProductText));

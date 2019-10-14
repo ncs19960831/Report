@@ -32,7 +32,7 @@ public:
     explicit DayReport(QString number);
 
     explicit DayReport( QString Product, QString Case, QString Target, QString Process, QString Diff, QDateTime StartTime, QDateTime EndTime, QString Priority, QString Evaluate,QString Number = nullptr);    bool SetNumber(QString string);
-    bool GetNember(QString* string);
+    bool GetNumber(QString* string);
     bool SetProduct(QString string);
     bool GetProduct(QString* string);
     bool SetCase(QString string);
