@@ -8,6 +8,7 @@ static DayReport* thisDayReport;
 static unsigned int thisSelectIndex;
 void uidayreport::ResetConnect()
 {
+    this->WriteOk = false;
     QObject::connect(ui->WriteButton,SIGNAL(accepted()),this,SLOT(Accept()));
     QObject::connect(ui->WriteButton_2,SIGNAL(accepted()),this,SLOT(Accept()));
     QObject::connect(ui->WriteButton_3,SIGNAL(accepted()),this,SLOT(Accept()));
@@ -23,10 +24,13 @@ uidayreport::uidayreport(unsigned int Index,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::uidayreport)
 {
+    QString String = QString(Index+0x30);
     thisDayReport = new DayReport(QString(Index));
     thisSelectIndex = Index;
     this->WriteOk = false;
     ui->setupUi(this);
+    ui->NameText->setText(String);
+
     ResetConnect();
 }
 
@@ -36,11 +40,12 @@ uidayreport::uidayreport(DayReport * dayreport,unsigned int Index):
     ui->setupUi(this);
     thisDayReport = dayreport;
     thisSelectIndex = Index;
+    QString String = QString(Index+0x30);
     if (thisDayReport->GetNumber(new QString()) == false)
     {
         thisDayReport = new DayReport(QString(Index));
     }
-    this->WriteOk = false;
+    ui->NameText->setText(String);
     ResetConnect();
 }
 
@@ -90,6 +95,7 @@ QString uidayreport::SelfRead(QTextEdit* InputString)
     if (InputString->toPlainText() == "")
         return String;
     String = InputString->toPlainText();//暂时不选择显示图片
+    return String;
 }
 
 QDateTime * uidayreport::SelfRead(QDateTimeEdit* DateTime)
@@ -102,6 +108,8 @@ QDateTime * uidayreport::SelfRead(QDateTimeEdit* DateTime)
         return String;
     if (DateTime->dateTime().isNull())
         return String;
+    *String = DateTime->dateTime();
+    return String;
 }
 
 void uidayreport::FinishReport()

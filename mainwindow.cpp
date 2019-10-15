@@ -96,35 +96,42 @@ int MainWindow::InitFilterTable()
     return 0;
 }
 
-int MainWindow::SetDayreportToItem(DayReport* Dayreport,int Row)
+int MainWindow::SetDayreportToItem(DayReport* Dayreport,unsigned int Row)
 {
     QString * string = new QString();
     QTableWidget* TableWidget = ui->MainTableWidget;
     QTableWidgetItem * TableWidgetItem = new QTableWidgetItem();
-    Dayreport->GetCase(string);
-    TableWidgetItem->setText(*string);
-    Dayreport->GetDiff(string);
-    TableWidgetItem->setText(*string);
 
     Dayreport->GetNumber(string);
-    TableWidgetItem->setText(*string);
-    Dayreport->GetTarget(string);
-    TableWidgetItem->setText(*string);
-
-    //Dayreport->GetEndTime(string);
-    TableWidgetItem->setText(*string);
-    Dayreport->GetProcess(string);
     TableWidgetItem->setText(*string);
 
     Dayreport->GetProduct(string);
     TableWidgetItem->setText(*string);
-    Dayreport->GetEvaluate(string);
+
+    Dayreport->GetCase(string);
+    TableWidgetItem->setText(*string);
+
+    Dayreport->GetTarget(string);
+    TableWidgetItem->setText(*string);
+
+    Dayreport->GetProcess(string);
+    TableWidgetItem->setText(*string);
+
+    Dayreport->GetDiff(string);
+    TableWidgetItem->setText(*string);
+
+    Dayreport->GetStartTime(string);
+    TableWidgetItem->setText(*string);
+
+    Dayreport->GetEndTime(string);
     TableWidgetItem->setText(*string);
 
     Dayreport->GetPriority(string);
     TableWidgetItem->setText(*string);
-    //Dayreport->GetStartTime(string);
+
+    Dayreport->GetEvaluate(string);
     TableWidgetItem->setText(*string);
+
     TableWidget->setCurrentItem(TableWidgetItem);
 
 }
@@ -144,7 +151,7 @@ int MainWindow::GetItemToDayreport(DayReport* Dayreport,QString* DataString, int
     printf_s("%s",DataString);
     return 0;
 }
-int MainWindow::AddDayReport(int index)
+int MainWindow::AddDayReport(unsigned int index)
 {
     uidayreport * uidayreport = new class uidayreport((unsigned int)index);
     uidayreport->SetSelectIndex((unsigned int)index);
@@ -152,19 +159,19 @@ int MainWindow::AddDayReport(int index)
     if (uidayreport->GetStatus())
     {
         DayReport * Dayreport = uidayreport->GetReport();
-        SetDayreportToItem(Dayreport,1);
+        SetDayreportToItem(Dayreport,index);
     }
 
     delete uidayreport;
     return 0;
 }
 
-int MainWindow::DelDayReport(int index)
+int MainWindow::DelDayReport(unsigned int index)
 {
     return 0;
 }
 
-int MainWindow::EditDayReport(int index)
+int MainWindow::EditDayReport(unsigned int index)
 {
     DayReport* Dayreport =new DayReport();
     QString* DataString= new QString();
@@ -179,9 +186,9 @@ int MainWindow::EditDayReport(int index)
 void MainWindow::on_pushButton_2_clicked()
 {
 
-    int index = ui->comboBox->currentIndex();
-
-    switch (index) {
+    unsigned int index = (unsigned int)ui->MainTableWidget->currentRow();
+    unsigned int Select = (unsigned int)ui->comboBox->currentIndex();
+    switch (Select) {
     case 0: {       //add
         AddDayReport(index);
     }break;

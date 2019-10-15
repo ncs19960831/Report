@@ -1,6 +1,6 @@
 #include "dayreport.h"
 
-
+static QString DateTimeStringFormat = QString("yyyy年MM月dd日-hh:mm:ss:zzz");
 DayReport::DayReport(QObject *parent) : QObject(parent)
 {
     QDate* DateNormal = new QDate(2000,1,1);
@@ -206,11 +206,11 @@ bool DayReport::SetStartTime(QDateTime * string)
         return false;
     }
 }
-bool DayReport::GetStartTime(QDateTime* string)
+bool DayReport::GetStartTime(QString* string)
 {
     if (!OnceDay.Number.isNull())
     {
-        string = &OnceDay.StartTime;
+        *string = OnceDay.StartTime.toString(DateTimeStringFormat);
         return true;
     }else
     {
@@ -229,11 +229,11 @@ bool DayReport::SetEndTime(QDateTime * string)
         return false;
     }
 }
-bool DayReport::GetEndTime(QDateTime* string)
+bool DayReport::GetEndTime(QString* string)
 {
     if (!OnceDay.Number.isNull())
     {
-        string = &OnceDay.EndTime;
+        *string = OnceDay.EndTime.toString(DateTimeStringFormat);
         return true;
     }else
     {
