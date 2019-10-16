@@ -21,10 +21,10 @@ public:
 
     ~MainWindow();
 
-    int AddDayReport(unsigned int index);
-    int DelDayReport(unsigned int index);
-    int EditDayReport(unsigned int index);
-    int SetDayreportToItem(DayReport* Dayreport,unsigned int Row);
+    int AddDayReport(int index);
+    int DelDayReport(int index);
+    int EditDayReport(int index);
+    int SetDayreportToItem(DayReport* Dayreport,int Row);
     int GetItemToDayreport(DayReport *Dayreport, QString *DataString, int ItemIndex);
     int InitMainTable();
     int InitFilterTable();

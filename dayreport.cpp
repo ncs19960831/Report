@@ -1,6 +1,6 @@
 #include "dayreport.h"
 
-static QString DateTimeStringFormat = QString("yyyy年MM月dd日-hh:mm:ss:zzz");
+static QString DateTimeStringFormat = QString("yyyy年MM月dd日-hh点mm分ss秒zzz毫秒");
 DayReport::DayReport(QObject *parent) : QObject(parent)
 {
     QDate* DateNormal = new QDate(2000,1,1);

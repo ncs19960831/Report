@@ -5,7 +5,7 @@
 #include <QDebug>
 
 static DayReport* thisDayReport;
-static unsigned int thisSelectIndex;
+static int thisSelectIndex;
 void uidayreport::ResetConnect()
 {
     this->WriteOk = false;
@@ -14,13 +14,13 @@ void uidayreport::ResetConnect()
     QObject::connect(ui->WriteButton_3,SIGNAL(accepted()),this,SLOT(Accept()));
 }
 
-void uidayreport::SetSelectIndex(unsigned int Index)
+void uidayreport::SetSelectIndex(int Index)
 {
     thisSelectIndex = Index;
     thisDayReport = new DayReport(QString(thisSelectIndex)) ;
 }
 
-uidayreport::uidayreport(unsigned int Index,QWidget *parent) :
+uidayreport::uidayreport(int Index,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::uidayreport)
 {
@@ -34,7 +34,7 @@ uidayreport::uidayreport(unsigned int Index,QWidget *parent) :
     ResetConnect();
 }
 
-uidayreport::uidayreport(DayReport * dayreport,unsigned int Index):
+uidayreport::uidayreport(DayReport * dayreport,int Index):
     ui(new Ui::uidayreport)
 {
     ui->setupUi(this);
@@ -115,7 +115,7 @@ QDateTime * uidayreport::SelfRead(QDateTimeEdit* DateTime)
 void uidayreport::FinishReport()
 {
     //序号
-    thisDayReport->SetNumber(QString(thisSelectIndex));
+    thisDayReport->SetNumber(QString(thisSelectIndex)+0x30);
     //开始
     thisDayReport->SetCase(this->SelfRead(ui->CaseText));
     thisDayReport->SetProduct(this->SelfRead(ui->ProductText));
