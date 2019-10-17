@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-
+QT       += sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = untitled
@@ -25,12 +25,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        datamanage.cpp \
         dayreport.cpp \
         main.cpp \
         mainwindow.cpp \
         uidayreport.cpp
 
 HEADERS += \
+        datamanage.h \
         dayreport.h \
         mainwindow.h \
         uidayreport.h
