@@ -7,6 +7,7 @@
 #include <QObject>
 #include <QTableWidget>
 #include <ui_mainwindow.h>
+#include "datamanage.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -17,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->InitMainTable();
     this->InitFilterTable();
+    DataManage thisDataManage = new DataManage (ui->MainTableWidget) ;
+
 }
 
 

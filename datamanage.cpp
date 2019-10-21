@@ -1,16 +1,17 @@
 #include "datamanage.h"
 #include <QSqlDatabase>
+#include <QSqlIndex>
 #include <QSqlTableModel>
-#include <QSqlTableModel>
+#include <QSqlRecord>
 #include <QUuid>
 #include "dayreport.h"
 
 QSqlDatabase      thisSqlDataBase;
 QSqlTableModel*    thisSqlTableModel;
+QSqlIndex           thisSqlIndex;
+QSqlRecord thisSqlRecord;
 
-
-
-bool DataManage::InitSqlDataBase(QWidget SqlTable,
+bool DataManage::InitSqlDataBase(QWidget* SqlTable,
                                  QString Database,
                                  QString DatabaseName,
                                  QString HostName,
@@ -23,13 +24,13 @@ bool DataManage::InitSqlDataBase(QWidget SqlTable,
         return true;
     }
     QSqlDatabase MySqlDataBase = QSqlDatabase::addDatabase(Database);
-    QSqlTableModel* retSqlTableModel = new QSqlTableModel(&SqlTable,MySqlDataBase);
-    MySqlDataBase.setDatabaseName(DatabaseName);
+    QSqlTableModel* retSqlTableModel = new QSqlTableModel(SqlTable,MySqlDataBase);
 
+    MySqlDataBase.setDatabaseName(DatabaseName);
     MySqlDataBase.setHostName(HostName);
     MySqlDataBase.setUserName(UserName);
     MySqlDataBase.setPassword(PassWord);
-    MySqlDataBase.setPort(20000);
+    MySqlDataBase.setPort(port);
 
     if (MySqlDataBase.open() == true)
     {
@@ -39,9 +40,8 @@ bool DataManage::InitSqlDataBase(QWidget SqlTable,
     }
 }
 
-DataManage::
 
-void DataManage::DataManage(QWidget SqlTable)
+DataManage::DataManage(QWidget* SqlTable)
 {
 
     if (InitSqlDataBase(SqlTable,
@@ -66,19 +66,22 @@ void DataManage::SaveDataBase(QString String)
 
 }
 
-void DataManage::SetOneData(DayReport DayReport)
+//尝试加入当前日志参数
+void DataManage::SetNewData(int Row,DayReport DayReport)
 {
-    QString String;
-    QSqlTableModel SqlTableModel = thisSqlTableModel;
-    if (!SqlTableModel.isValid() )
-    {
-        return;
-    }
+    QString String,AddString;
+    QSqlTableModel* SqlTableModel = thisSqlTableModel;
+    QSqlRecord SqlRecord = SqlTableModel->record();
+
     if (!DayReport.GetNumber(&String))
     {
         return;
     }
     DayReport.GetStartTime(&String);
     QUuid *Uuid = new QUuid(String);
+    SqlRecord.setValue(Row+1,Uuid->toString());
+    SqlTableModel->insertRecord(Row+1,SqlRecord);
+    SqlTableModel->submitAll();
+
 
 }
