@@ -19,12 +19,11 @@ bool DataManage::InitSqlDataBase(QWidget* SqlTable,
                                  QString PassWord,
                                  int port)
 {
-    if (!thisSqlDataBase.isOpen())
+    if (thisSqlDataBase.isOpen())
     {
         return true;
     }
     QSqlDatabase MySqlDataBase = QSqlDatabase::addDatabase(Database);
-    QSqlTableModel* retSqlTableModel = new QSqlTableModel(SqlTable,MySqlDataBase);
 
     MySqlDataBase.setDatabaseName(DatabaseName);
     MySqlDataBase.setHostName(HostName);
@@ -34,8 +33,26 @@ bool DataManage::InitSqlDataBase(QWidget* SqlTable,
 
     if (MySqlDataBase.open() == true)
     {
+        QSqlTableModel* retSqlTableModel = new QSqlTableModel(SqlTable,MySqlDataBase);
         thisSqlDataBase = MySqlDataBase;
+        QSqlQuery* SqlQuery = new QSqlQuery(MySqlDataBase);
+        QString DayReportSql = "create table if not exists DayReport("
+                          "[id] integer primary key autoincrement,"
+                          "[Number] varchar(30),"       //序号
+                          "[Product] varchar(30),"      //机型
+                          "[Case] varchar(30),"         //事项
+                          "[Target] varchar(30),"       //目标
+                          "[Process] varchar(30),"      //实际进行
+                          "[Diff] varchar(30),"         //差异以及改善
+                          "[StartTime] varchar(30),"    //开始时间
+                          "[EndTime] varchar(30),"      //结束时间
+                          "[Priority] varchar(30),"     //权重（优先级）
+                          "[Evaluate] varchar(30)"      //评估
+                          ")";
+        if(!(SqlQuery->exec(DayReportSql)))
+            return false;
         thisSqlTableModel = retSqlTableModel;
+        MySqlDataBase.close();
         return true;
     }
 }
@@ -45,7 +62,7 @@ DataManage::DataManage(QWidget* SqlTable)
 {
 
     if (InitSqlDataBase(SqlTable,
-                    "DayReport",
+                    "QSQLITE",
                     "DayReport.db",
                     "NCSData",
                     "ncs",
@@ -79,7 +96,7 @@ void DataManage::SetNewData(int Row,DayReport DayReport)
     }
     DayReport.GetStartTime(&String);
     QUuid *Uuid = new QUuid(String);
-    SqlRecord.setValue(Row+1,Uuid->toString());
+    SqlRecord.setValue(1,Uuid->toString());
     SqlTableModel->insertRecord(Row+1,SqlRecord);
     SqlTableModel->submitAll();
 

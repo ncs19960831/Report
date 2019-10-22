@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->InitMainTable();
     this->InitFilterTable();
-    DataManage thisDataManage = new DataManage (ui->MainTableWidget) ;
+    DataManage* thisDataManage = new DataManage (ui->MainTableWidget) ;
 
 }
 
