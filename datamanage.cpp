@@ -52,7 +52,7 @@ bool DataManage::InitSqlDataBase(QWidget* SqlTable,
         if(!(SqlQuery->exec(DayReportSql)))
             return false;
         thisSqlTableModel = retSqlTableModel;
-        MySqlDataBase.close();
+//        MySqlDataBase.close();
         return true;
     }
 }
@@ -84,21 +84,63 @@ void DataManage::SaveDataBase(QString String)
 }
 
 //尝试加入当前日志参数
-void DataManage::SetNewData(int Row,DayReport DayReport)
+void DataManage::SetNewData(int Row,DayReport* DayReport)
 {
     QString String,AddString;
     QSqlTableModel* SqlTableModel = thisSqlTableModel;
     QSqlRecord SqlRecord = SqlTableModel->record();
 
-    if (!DayReport.GetNumber(&String))
+    if (!DayReport->GetNumber(&String))
     {
         return;
     }
-    DayReport.GetStartTime(&String);
+    DayReport->GetStartTime(&String);
     QUuid *Uuid = new QUuid(String);
     SqlRecord.setValue(1,Uuid->toString());
+
+    DayReport->GetNumber(&String);
+    SqlRecord.setValue(2,String);
+
+    DayReport->GetProduct(&String);
+    SqlRecord.setValue(3,String);
+
+    DayReport->GetCase(&String);
+    SqlRecord.setValue(4,String);
+
+    DayReport->GetTarget(&String);
+    SqlRecord.setValue(5,String);
+
+    DayReport->GetProcess(&String);
+    SqlRecord.setValue(6,String);
+
+    DayReport->GetDiff(&String);
+    SqlRecord.setValue(7,String);
+
+    DayReport->GetStartTime(&String);
+    SqlRecord.setValue(8,String);
+
+    DayReport->GetEndTime(&String);
+    SqlRecord.setValue(9,String);
+
+    DayReport->GetPriority(&String);
+    SqlRecord.setValue(10,String);
+
+    DayReport->GetEvaluate(&String);
+    SqlRecord.setValue(11,String);
+
+
     SqlTableModel->insertRecord(Row+1,SqlRecord);
+    Row = SqlTableModel->rowCount();
     SqlTableModel->submitAll();
 
-
 }
+
+
+
+
+
+
+
+
+
+

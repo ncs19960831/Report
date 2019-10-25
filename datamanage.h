@@ -16,7 +16,7 @@ public:
     bool InitSqlDataBase(QWidget* SqlTable, QString Database, QString DatabaseName, QString HostName, QString UserName, QString PassWord, int port);
     DataManage(QWidget* SqlTable);
     void SaveDataBase(QString String);
-    void SetNewData(int Row, DayReport DayReport);
+    void SetNewData(int Row, DayReport* DayReport);
 };
 
 #endif // DATAMANAGE_H

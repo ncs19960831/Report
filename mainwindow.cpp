@@ -6,9 +6,10 @@
 #include <math.h>
 #include <QObject>
 #include <QTableWidget>
+#include <QTableView>
 #include <ui_mainwindow.h>
 #include "datamanage.h"
-
+ DataManage* thisDataManage ;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->InitMainTable();
     this->InitFilterTable();
-    DataManage* thisDataManage = new DataManage (ui->MainTableWidget) ;
+    thisDataManage = new DataManage (ui->MainTableWidget) ;
 
 }
 
@@ -27,18 +28,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 int MainWindow::InitMainTable()
 {
-    static QList<QString> list;
-    QTableWidget* TableWidget = ui->MainTableWidget;
-    list <<"序号"<<"机型"<<"事项"<<"目标"<<"实际进行"<<"差异及改善"<<"开始时间"<<"结束时间"<<"权重"<<"评估";
-    TableWidget->setColumnCount(list.count());
-    TableWidget->setRowCount(10);
-    TableWidget->setHorizontalHeaderLabels(list);
-
-    TableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);//整行选中的方式
-    TableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);//禁止修改
-    TableWidget->setSelectionMode(QAbstractItemView::SingleSelection);//可以选中单个
-
-    TableWidget->setItem(1,1,new QTableWidgetItem("Jan"));
 
     return 0;
 }
@@ -107,80 +96,8 @@ int MainWindow::SetDayreportToItem(DayReport* Dayreport,int Row)
 {
     int Column = 0;
     QString * string = new QString();
-    QTableWidget* TableWidget = ui->MainTableWidget;
-    QTableWidgetItem * TableWidgetItem = new QTableWidgetItem();
-    if (Row >= TableWidget->currentRow())
-    {
-        TableWidget->setRowCount(Row+1);
-    }
-
-    Dayreport->GetNumber(string);
-    TableWidgetItem = new QTableWidgetItem(*string);
-    TableWidget->setItem(Row,Column++,TableWidgetItem);
-    delete TableWidgetItem;
-    string->clear();
-
-    Dayreport->GetProduct(string);
-    TableWidgetItem = new QTableWidgetItem(*string);
-    TableWidget->setItem(Row,Column++,TableWidgetItem);
-    delete TableWidgetItem;
-    string->clear();
-
-
-    Dayreport->GetCase(string);
-    TableWidgetItem = new QTableWidgetItem(*string);
-    TableWidget->setItem(Row,Column++,TableWidgetItem);
-    delete TableWidgetItem;
-    string->clear();
-
-
-    Dayreport->GetTarget(string);
-    TableWidgetItem = new QTableWidgetItem(*string);
-    TableWidget->setItem(Row,Column++,TableWidgetItem);
-    delete TableWidgetItem;
-    string->clear();
-
-
-    Dayreport->GetProcess(string);
-    TableWidgetItem = new QTableWidgetItem(*string);
-    TableWidget->setItem(Row,Column++,TableWidgetItem);
-    delete TableWidgetItem;
-    string->clear();
-
-
-    Dayreport->GetDiff(string);
-    TableWidgetItem = new QTableWidgetItem(*string);
-    TableWidget->setItem(Row,Column++,TableWidgetItem);
-    delete TableWidgetItem;
-    string->clear();
-
-
-    Dayreport->GetStartTime(string);
-    TableWidgetItem = new QTableWidgetItem(*string);
-    TableWidget->setItem(Row,Column++,TableWidgetItem);
-    delete TableWidgetItem;
-    string->clear();
-
-
-    Dayreport->GetEndTime(string);
-    TableWidgetItem = new QTableWidgetItem(*string);
-    TableWidget->setItem(Row,Column++,TableWidgetItem);
-    delete TableWidgetItem;
-    string->clear();
-
-
-    Dayreport->GetPriority(string);
-    TableWidgetItem = new QTableWidgetItem(*string);
-    TableWidget->setItem(Row,Column++,TableWidgetItem);
-    delete TableWidgetItem;
-    string->clear();
-
-
-    Dayreport->GetEvaluate(string);
-    TableWidgetItem = new QTableWidgetItem(*string);
-    TableWidget->setItem(Row,Column++,TableWidgetItem);
-    delete TableWidgetItem;
-    string->clear();
+    QTableView* TableView = ui->MainTableView;
+    thisDataManage->SetNewData(Row,Dayreport);
 
 
 
@@ -190,14 +107,11 @@ int MainWindow::SetDayreportToItem(DayReport* Dayreport,int Row)
 
 int MainWindow::GetItemToDayreport(DayReport* Dayreport,QString* DataString, int ItemIndex)
 {
-    QTableWidgetItem* TableWidgetItem = new QTableWidgetItem();
-    QTableWidget* MainTableWidget = ui->MainTableWidget;
-    if (MainTableWidget->currentRow() != 0)
+    QTableView* MainTableView = ui->MainTableView;
+    if (MainTableView->currentRow() != 0)
     {
         return -1;
     }
-    TableWidgetItem = MainTableWidget->currentItem();
-    *DataString = TableWidgetItem->text();
     printf_s("%s",DataString);
     return 0;
 }
@@ -227,16 +141,14 @@ int MainWindow::EditDayReport(int index)
     QString* DataString= new QString();
     uidayreport * uidayreport = new class uidayreport((unsigned int)index);
     uidayreport->show();
-    QTableWidget* MainTableWidget = ui->MainTableWidget;
-    int Row = MainTableWidget->currentRow();
-    this->GetItemToDayreport(Dayreport,DataString,Row);
+//    this->GetItemToDayreport(Dayreport,DataString,Row);
     return 0;
 }
 
 void MainWindow::on_pushButton_2_clicked()
 {
 
-    int index = ui->MainTableWidget->currentRow();
+    int index = ui->MainTableWidget;
     int Select = ui->comboBox->currentIndex();
     switch (Select) {
     case 0: {       //add
