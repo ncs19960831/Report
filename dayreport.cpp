@@ -20,7 +20,12 @@ DayReport::DayReport(QObject *parent) : QObject(parent)
 }
 DayReport::DayReport(QString number)
 {
+    QDate* DateNormal = new QDate(2000,1,1);
+    QTime* TimeNormal = new QTime(1,1,1,0);
+    QDateTime* DateTimeNormal =new QDateTime(DateNormal->currentDate(),TimeNormal->currentTime());
     OnceDay.Number = number;
+    OnceDay.StartTime = DateTimeNormal->currentDateTime();
+    OnceDay.EndTime = DateTimeNormal->currentDateTime();
 }
 
 DayReport::DayReport(QString Product,    //机型
@@ -55,6 +60,7 @@ QString Number)     //序号
         OnceDay.StartTime = DateTimeNormal->currentDateTime();
     }
 }
+
 
 bool DayReport::SetNumber(QString string)
 {
@@ -195,11 +201,15 @@ bool DayReport::GetDiff(QString* string)
         return false;
     }
 }
-bool DayReport::SetStartTime(QDateTime * string)
+
+
+bool DayReport::SetStartTime(QString string)
 {
+    QDateTime DateTime = QDateTime::fromString(string,DateTimeStringFormat);
     if (!OnceDay.Number.isNull())
     {
-        OnceDay.StartTime = string->toLocalTime();
+
+        OnceDay.StartTime = DateTime.toLocalTime();
         return true;
     }
     else {
@@ -218,11 +228,12 @@ bool DayReport::GetStartTime(QString* string)
     }
 }
 
-bool DayReport::SetEndTime(QDateTime * string)
+bool DayReport::SetEndTime(QString string)
 {
+    QDateTime DateTime = QDateTime::fromString(string,DateTimeStringFormat);
     if (!OnceDay.Number.isNull())
     {
-        OnceDay.EndTime = string->toLocalTime();
+        OnceDay.EndTime = DateTime.toLocalTime();
         return true;
     }
     else {

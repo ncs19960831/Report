@@ -29,6 +29,9 @@ int MainWindow::InitMainTable()
 {
     QTableView * TableView = ui->MainTableView;
     thisDataManage = new DataManage (TableView) ;
+    TableView->hideColumn(0);
+    TableView->setEditTriggers(QAbstractItemView::NoEditTriggers);//使其不可编辑
+
     TableView->setSelectionBehavior(QAbstractItemView::SelectRows);//整行选中的方式
     TableView->setEditTriggers(QAbstractItemView::NoEditTriggers);//禁止修改
     TableView->setSelectionMode(QAbstractItemView::SingleSelection);//可以选中单个
@@ -105,14 +108,16 @@ int MainWindow::SetDayreportToItem(DayReport* Dayreport,int Row)
 
 
 
-int MainWindow::GetItemToDayreport(DayReport* Dayreport,QString* DataString, int ItemIndex)
+int MainWindow::GetItemToDayreport(DayReport* Dayreport, int ItemIndex)
 {
     QTableView* MainTableView = ui->MainTableView;
-    if (MainTableView->model()->rowCount() != 0)
+    DataManage* DataManage = thisDataManage;
+    if (MainTableView->model()->rowCount() <= 0)
     {
         return -1;
     }
-    printf_s("%s",DataString);
+    DataManage->GetOneData(ItemIndex,Dayreport);
+
     return 0;
 }
 int MainWindow::AddDayReport(int index)
@@ -138,18 +143,27 @@ int MainWindow::DelDayReport(int index)
 int MainWindow::EditDayReport(int index)
 {
     DayReport* Dayreport =new DayReport();
-    QString* DataString= new QString();
-    uidayreport * uidayreport = new class uidayreport((unsigned int)index);
-    uidayreport->show();
-//    this->GetItemToDayreport(Dayreport,DataString,Row);
+    GetItemToDayreport(Dayreport,index);
+    uidayreport * uidayreport = new class uidayreport(Dayreport,(unsigned int)index);
+    uidayreport->exec();
+    if (uidayreport->GetStatus())
+    {
+        DayReport * Dayreport = uidayreport->GetReport();
+        SetDayreportToItem(Dayreport,index);
+    }
     return 0;
 }
 
 void MainWindow::on_pushButton_2_clicked()
 {
 
-    int index = ui->MainTableView->model()->rowCount();
+    int index = ui->MainTableView->currentIndex().row();
+    if (index<0)
+    {
+        index = ui->MainTableView->model()->rowCount();
+    }
     int Select = ui->comboBox->currentIndex();
+    index++;
     switch (Select) {
     case 0: {       //add
         AddDayReport(index);

@@ -98,18 +98,19 @@ QString uidayreport::SelfRead(QTextEdit* InputString)
     return String;
 }
 
-QDateTime * uidayreport::SelfRead(QDateTimeEdit* DateTime)
+QString uidayreport::SelfRead(QDateTimeEdit* DateTime)
 {
     QDate* DateNormal = new QDate(2000,1,1);
     QTime* TimeNormal = new QTime(1,1,1,0);
-    QDateTime* String =new QDateTime(DateNormal->currentDate(),TimeNormal->currentTime());
+    QString *String = new QString() ;
+    QDateTime* Date =new QDateTime(DateNormal->currentDate(),TimeNormal->currentTime());
 
     if (DateTime->dateTime().toString() == "")
-        return String;
+        return *String;
     if (DateTime->dateTime().isNull())
-        return String;
-    *String = DateTime->dateTime();
-    return String;
+        return *String;
+    *String = DateTime->dateTime().toString();
+    return *String;
 }
 
 void uidayreport::FinishReport()

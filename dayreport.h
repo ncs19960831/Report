@@ -43,9 +43,9 @@ public:
     bool GetProcess(QString* string);
     bool SetDiff(QString string);
     bool GetDiff(QString* string);
-    bool SetStartTime(QDateTime * string);
+    bool SetStartTime(QString string);
     bool GetStartTime(QString* string);
-    bool SetEndTime(QDateTime * string);
+    bool SetEndTime(QString string);
     bool GetEndTime(QString* string);
     bool SetPriority(QString string);
     bool GetPriority(QString* string);

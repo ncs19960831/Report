@@ -25,10 +25,10 @@ public:
     int DelDayReport(int index);
     int EditDayReport(int index);
     int SetDayreportToItem(DayReport* Dayreport,int Row);
-    int GetItemToDayreport(DayReport *Dayreport, QString *DataString, int ItemIndex);
     int InitMainTable();
     int InitFilterTable();
     int UpdateFilterTable();
+    int GetItemToDayreport(DayReport *Dayreport, int ItemIndex);
 private slots:
 
     void on_pushButton_2_clicked();

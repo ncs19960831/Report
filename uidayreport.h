@@ -28,7 +28,7 @@ public:
 
     void SetSelectIndex(int Index);
     void ResetConnect();
-    QDateTime *SelfRead(QDateTime Time);
+    QString SelfRead(QDateTimeEdit *DateTime);
 
 private slots:
 
@@ -40,7 +40,6 @@ private:
     QString SelfRead(QLineEdit* InputString);
     QString SelfRead(QComboBox* InputString);
     QString SelfRead(QTextEdit* InputString);
-    QDateTime *SelfRead(QDateTimeEdit* DateTime);
 };
 
 #endif // UIDAYREPORT_H

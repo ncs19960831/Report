@@ -18,6 +18,10 @@ public:
     DataManage(QTableView* SqlTable);
     void SaveDataBase(QString String);
     void SetNewData(int Row, DayReport* DayReport);
+    int GetOneData(int Row, DayReport *DayReport);
+    void EditData(int Row, DayReport *DayReport);
+private:
+    ~DataManage();
 };
 
 #endif // DATAMANAGE_H

@@ -8,9 +8,11 @@
 #include "dayreport.h"
 
 QSqlDatabase      thisSqlDataBase;
-QSqlTableModel*    thisSqlTableModel;
+QTableView*    thisTableView;
 QSqlIndex           thisSqlIndex;
 QSqlRecord thisSqlRecord;
+QSqlQuery thisSqlQuery;
+
 
 bool DataManage::InitSqlDataBase(QTableView* SqlTable,
                                  QString Database,
@@ -20,10 +22,18 @@ bool DataManage::InitSqlDataBase(QTableView* SqlTable,
                                  QString PassWord,
                                  int port)
 {
-    if (thisSqlDataBase.isOpen())
+    if (&thisSqlDataBase != nullptr)
     {
-        return true;
+        if (thisSqlDataBase.isValid())
+        {
+            if (thisSqlDataBase.isOpen())
+            {
+                return true;
+            }
+        }
     }
+
+
     QSqlDatabase MySqlDataBase = QSqlDatabase::addDatabase(Database);
 
     MySqlDataBase.setDatabaseName(DatabaseName);
@@ -37,7 +47,7 @@ bool DataManage::InitSqlDataBase(QTableView* SqlTable,
         QSqlTableModel* retSqlTableModel = new QSqlTableModel(SqlTable,MySqlDataBase);
         QSqlQuery* SqlQuery = new QSqlQuery(MySqlDataBase);
         QString DayReportSql = "create table if not exists DayReport("
-                          "[id] integer primary key autoincrement,"
+                          "[id] varchar primary key ,"
                           "[Number] varchar(30),"       //序号
                           "[Product] varchar(30),"      //机型
                           "[Case] varchar(30),"         //事项
@@ -51,11 +61,23 @@ bool DataManage::InitSqlDataBase(QTableView* SqlTable,
                           ")";
         if(!(SqlQuery->exec(DayReportSql)))
             return false;
+        thisSqlQuery = *SqlQuery;
         static QList<QString> list;
         retSqlTableModel->setTable("DayReport");//选择数据表
         retSqlTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);//设置保存策略为手动提交
         list.clear();
-        list<<"ID"<<"序号"<<"机型"<<"事项"<<"目标"<<"实际进行"<<"差异及改善"<<"开始时间"<<"结束时间"<<"权重"<<"评估";
+        list<<\
+               "ID"<<
+               "序号"<<
+               "机型"<<\
+               "事项"<<\
+               "目标"<<\
+               "实际进行"<<\
+               "差异及改善"<<\
+               "开始时间"<<\
+               "结束时间"<<\
+               "权重"<<\
+               "评估";
         retSqlTableModel->setHeaderData(0, Qt::Horizontal,list.at(0));
         retSqlTableModel->setHeaderData(1, Qt::Horizontal,list.at(1));
         retSqlTableModel->setHeaderData(2, Qt::Horizontal,list.at(2));
@@ -69,14 +91,8 @@ bool DataManage::InitSqlDataBase(QTableView* SqlTable,
         retSqlTableModel->setHeaderData(10, Qt::Horizontal,list.at(10));
         retSqlTableModel->select(); //选取整个表的所有行
         SqlTable->setModel(retSqlTableModel);
-
-//        SqlTable->hideColumn(0);
-        //SqlTable->setColumnHidden(-1,1);
-        SqlTable->setEditTriggers(QAbstractItemView::NoEditTriggers);//使其不可编辑
-
-        thisSqlTableModel = retSqlTableModel;
+        thisTableView = SqlTable;
         thisSqlDataBase = MySqlDataBase;
-//        MySqlDataBase.close();
         return true;
     }
 }
@@ -102,6 +118,15 @@ DataManage::DataManage(QTableView* SqlTable)
 
 }
 
+DataManage::~DataManage()
+{
+    thisSqlDataBase.close();
+    thisSqlIndex.~QSqlIndex();
+    thisSqlRecord.~QSqlRecord();
+    thisSqlQuery.~QSqlQuery();
+
+}
+
 void DataManage::SaveDataBase(QString String)
 {
 
@@ -111,14 +136,14 @@ void DataManage::SaveDataBase(QString String)
 void DataManage::SetNewData(int Row,DayReport* DayReport)
 {
     QString String,AddString;
-    QSqlTableModel* SqlTableModel = thisSqlTableModel;
+    QSqlTableModel* SqlTableModel = (QSqlTableModel*)thisTableView->model();
     QSqlRecord SqlRecord = SqlTableModel->record();
 
     if (!DayReport->GetNumber(&String))
     {
         return;
     }
-
+    Row--;
     DayReport->GetStartTime(&String);
     QUuid *Uuid = new QUuid(String);
     String=Uuid->createUuid().toString();
@@ -160,9 +185,106 @@ void DataManage::SetNewData(int Row,DayReport* DayReport)
     Row = SqlTableModel->rowCount();
     SqlTableModel->submitAll();
 
+
+}
+
+//尝试加入当前日志参数
+void DataManage::EditData(int Row,DayReport* DayReport)
+{
+    QString String,AddString;
+    QSqlTableModel* SqlTableModel = (QSqlTableModel*)thisTableView->model();
+    Row--;
+    QSqlRecord SqlRecord = SqlTableModel->record(Row);
+
+    if (!DayReport->GetNumber(&String))
+    {
+        return;
+    }
+    DayReport->GetStartTime(&String);
+    QUuid *Uuid = new QUuid(String);
+    String=Uuid->createUuid().toString();
+
+    SqlRecord.setValue(0,String);
+
+    DayReport->GetNumber(&String);
+    SqlRecord.setValue(1,String);
+
+    DayReport->GetProduct(&String);
+    SqlRecord.setValue(2,String);
+
+    DayReport->GetCase(&String);
+    SqlRecord.setValue(3,String);
+
+    DayReport->GetTarget(&String);
+    SqlRecord.setValue(4,String);
+
+    DayReport->GetProcess(&String);
+    SqlRecord.setValue(5,String);
+
+    DayReport->GetDiff(&String);
+    SqlRecord.setValue(6,String);
+
+    DayReport->GetStartTime(&String);
+    SqlRecord.setValue(7,String);
+
+    DayReport->GetEndTime(&String);
+    SqlRecord.setValue(8,String);
+
+    DayReport->GetPriority(&String);
+    SqlRecord.setValue(9,String);
+
+    DayReport->GetEvaluate(&String);
+    SqlRecord.setValue(10,String);
+
+    Row = SqlTableModel->rowCount();
+    if(SqlTableModel->setRecord(Row,SqlRecord))
+    {
+        SqlTableModel->submitAll();
+    }
+
 }
 
 
+
+int DataManage::GetOneData(int Row, DayReport* DayReport)
+{
+    QString* String = new QString();
+    QSqlRecord *SqlRecord = &thisSqlRecord;
+    QSqlTableModel* SqlTableModel = (QSqlTableModel*)thisTableView->model();
+    Row--;
+    *SqlRecord = SqlTableModel->record(Row);
+
+    *String = SqlRecord->value(1).toString();
+    DayReport->SetNumber(*String);
+
+    *String = SqlRecord->value(2).toString();
+    DayReport->SetProduct(*String);
+
+    *String = SqlRecord->value(3).toString();
+    DayReport->SetCase(*String);
+
+    *String = SqlRecord->value(4).toString();
+    DayReport->SetTarget(*String);
+
+    *String = SqlRecord->value(5).toString();
+    DayReport->SetProcess(*String);
+
+    *String = SqlRecord->value(6).toString();
+    DayReport->SetDiff(*String);
+
+    *String = SqlRecord->value(7).toString();
+    DayReport->SetStartTime(*String);
+
+    *String = SqlRecord->value(8).toString();
+    DayReport->SetEndTime(*String);
+
+    *String = SqlRecord->value(9).toString();
+    DayReport->SetPriority(*String);
+
+    *String = SqlRecord->value(10).toString();
+    DayReport->SetEvaluate(*String);
+
+}
 
 
 
