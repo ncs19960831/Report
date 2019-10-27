@@ -71,7 +71,7 @@ bool DayReport::GetNumber(QString* string)
 {
     if (!OnceDay.Number.isNull())
     {
-        string = &OnceDay.Number;
+        *string = OnceDay.Number;
         return true;
     }else
     {
@@ -96,7 +96,7 @@ bool DayReport::GetProduct(QString* string)
 {
     if (!OnceDay.Number.isNull())
     {
-        string = &OnceDay.Product;
+        *string = OnceDay.Product;
         return true;
     }else
     {
@@ -119,7 +119,7 @@ bool DayReport::GetCase(QString* string)
 {
     if (!OnceDay.Number.isNull())
     {
-        string = &OnceDay.Case;
+        *string = OnceDay.Case;
         return true;
     }else
     {
@@ -142,7 +142,7 @@ bool DayReport::GetTarget(QString* string)
 {
     if (!OnceDay.Number.isNull())
     {
-        string = &OnceDay.Target;
+        *string = OnceDay.Target;
         return true;
     }else
     {
@@ -165,7 +165,7 @@ bool DayReport::GetProcess(QString* string)
 {
     if (!OnceDay.Number.isNull())
     {
-        string = &OnceDay.Process;
+        *string = OnceDay.Process;
         return true;
     }else
     {
@@ -188,7 +188,7 @@ bool DayReport::GetDiff(QString* string)
 {
     if (!OnceDay.Number.isNull())
     {
-        string = &OnceDay.Diff;
+        *string = OnceDay.Diff;
         return true;
     }else
     {
@@ -199,7 +199,7 @@ bool DayReport::SetStartTime(QDateTime * string)
 {
     if (!OnceDay.Number.isNull())
     {
-        OnceDay.StartTime = string->currentDateTime();
+        OnceDay.StartTime = string->toLocalTime();
         return true;
     }
     else {
@@ -222,7 +222,7 @@ bool DayReport::SetEndTime(QDateTime * string)
 {
     if (!OnceDay.Number.isNull())
     {
-        OnceDay.EndTime = string->currentDateTime();
+        OnceDay.EndTime = string->toLocalTime();
         return true;
     }
     else {
@@ -256,7 +256,7 @@ bool DayReport::GetPriority(QString* string)
 {
     if (!OnceDay.Number.isNull())
     {
-        string = &OnceDay.Priority;
+        *string = OnceDay.Priority;
         return true;
     }else
     {
@@ -279,7 +279,7 @@ bool DayReport::GetEvaluate(QString* string)
 {
     if (!OnceDay.Number.isNull())
     {
-        string = &OnceDay.Evaluate;
+        *string = OnceDay.Evaluate;
         return true;
     }else
     {

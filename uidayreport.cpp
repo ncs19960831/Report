@@ -24,9 +24,9 @@ uidayreport::uidayreport(int Index,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::uidayreport)
 {
-    QString String = QString(Index+0x30);
-    thisDayReport = new DayReport(QString(Index));
     thisSelectIndex = Index;
+    QString String = QString(thisSelectIndex+0x30);
+    thisDayReport = new DayReport(String);
     this->WriteOk = false;
     ui->setupUi(this);
     ui->NameText->setText(String);
@@ -40,10 +40,10 @@ uidayreport::uidayreport(DayReport * dayreport,int Index):
     ui->setupUi(this);
     thisDayReport = dayreport;
     thisSelectIndex = Index;
-    QString String = QString(Index+0x30);
+    QString String = QString(thisSelectIndex+0x30);
     if (thisDayReport->GetNumber(new QString()) == false)
     {
-        thisDayReport = new DayReport(QString(Index));
+        thisDayReport = new DayReport(String);
     }
     ui->NameText->setText(String);
     ResetConnect();
@@ -115,7 +115,7 @@ QDateTime * uidayreport::SelfRead(QDateTimeEdit* DateTime)
 void uidayreport::FinishReport()
 {
     //序号
-    thisDayReport->SetNumber(QString(thisSelectIndex)+0x30);
+    thisDayReport->SetNumber(QString(thisSelectIndex+0x30));
     //开始
     thisDayReport->SetCase(this->SelfRead(ui->CaseText));
     thisDayReport->SetProduct(this->SelfRead(ui->ProductText));

@@ -19,7 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->InitMainTable();
     this->InitFilterTable();
-    thisDataManage = new DataManage (ui->MainTableWidget) ;
 
 }
 
@@ -28,7 +27,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 int MainWindow::InitMainTable()
 {
-
+    QTableView * TableView = ui->MainTableView;
+    thisDataManage = new DataManage (TableView) ;
+    TableView->setSelectionBehavior(QAbstractItemView::SelectRows);//整行选中的方式
+    TableView->setEditTriggers(QAbstractItemView::NoEditTriggers);//禁止修改
+    TableView->setSelectionMode(QAbstractItemView::SingleSelection);//可以选中单个
     return 0;
 }
 
@@ -94,9 +97,6 @@ int MainWindow::InitFilterTable()
 
 int MainWindow::SetDayreportToItem(DayReport* Dayreport,int Row)
 {
-    int Column = 0;
-    QString * string = new QString();
-    QTableView* TableView = ui->MainTableView;
     thisDataManage->SetNewData(Row,Dayreport);
 
 
@@ -108,7 +108,7 @@ int MainWindow::SetDayreportToItem(DayReport* Dayreport,int Row)
 int MainWindow::GetItemToDayreport(DayReport* Dayreport,QString* DataString, int ItemIndex)
 {
     QTableView* MainTableView = ui->MainTableView;
-    if (MainTableView->currentRow() != 0)
+    if (MainTableView->model()->rowCount() != 0)
     {
         return -1;
     }
@@ -118,7 +118,7 @@ int MainWindow::GetItemToDayreport(DayReport* Dayreport,QString* DataString, int
 int MainWindow::AddDayReport(int index)
 {
     uidayreport * uidayreport = new class uidayreport(index);
-    uidayreport->SetSelectIndex(index);
+//    uidayreport->SetSelectIndex(index);
     uidayreport->exec();        //栓塞等待选择完成
     if (uidayreport->GetStatus())
     {
@@ -148,7 +148,7 @@ int MainWindow::EditDayReport(int index)
 void MainWindow::on_pushButton_2_clicked()
 {
 
-    int index = ui->MainTableWidget;
+    int index = ui->MainTableView->model()->rowCount();
     int Select = ui->comboBox->currentIndex();
     switch (Select) {
     case 0: {       //add
