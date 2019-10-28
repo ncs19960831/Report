@@ -193,8 +193,7 @@ void DataManage::EditData(int Row,DayReport* DayReport)
 {
     QString String,AddString;
     QSqlTableModel* SqlTableModel = (QSqlTableModel*)thisTableView->model();
-    Row--;
-    QSqlRecord SqlRecord = SqlTableModel->record(Row);
+    QSqlRecord SqlRecord = SqlTableModel->record(Row-1);
 
     if (!DayReport->GetNumber(&String))
     {
@@ -206,8 +205,8 @@ void DataManage::EditData(int Row,DayReport* DayReport)
 
     SqlRecord.setValue(0,String);
 
-    DayReport->GetNumber(&String);
-    SqlRecord.setValue(1,String);
+//    DayReport->GetNumber(&String);
+    SqlRecord.setValue(1,QString(0x30+Row));
 
     DayReport->GetProduct(&String);
     SqlRecord.setValue(2,String);
@@ -236,9 +235,9 @@ void DataManage::EditData(int Row,DayReport* DayReport)
     DayReport->GetEvaluate(&String);
     SqlRecord.setValue(10,String);
 
-    Row = SqlTableModel->rowCount();
-    if(SqlTableModel->setRecord(Row,SqlRecord))
+    if(SqlTableModel->setRecord(Row-1,SqlRecord))
     {
+        Row = SqlTableModel->rowCount();
         SqlTableModel->submitAll();
     }
 
@@ -251,8 +250,7 @@ int DataManage::GetOneData(int Row, DayReport* DayReport)
     QString* String = new QString();
     QSqlRecord *SqlRecord = &thisSqlRecord;
     QSqlTableModel* SqlTableModel = (QSqlTableModel*)thisTableView->model();
-    Row--;
-    *SqlRecord = SqlTableModel->record(Row);
+    *SqlRecord = SqlTableModel->record(Row-1);
 
     *String = SqlRecord->value(1).toString();
     DayReport->SetNumber(*String);

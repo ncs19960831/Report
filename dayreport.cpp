@@ -61,6 +61,10 @@ QString Number)     //序号
     }
 }
 
+QString DayReport::GetDateTimeFormat()
+{
+    return DateTimeStringFormat;
+}
 
 bool DayReport::SetNumber(QString string)
 {

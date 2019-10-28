@@ -29,6 +29,7 @@ public:
     int InitFilterTable();
     int UpdateFilterTable();
     int GetItemToDayreport(DayReport *Dayreport, int ItemIndex);
+    int EditDayreportToItem(DayReport *Dayreport, int Row);
 private slots:
 
     void on_pushButton_2_clicked();

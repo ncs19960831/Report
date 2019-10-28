@@ -102,11 +102,13 @@ int MainWindow::SetDayreportToItem(DayReport* Dayreport,int Row)
 {
     thisDataManage->SetNewData(Row,Dayreport);
 
-
-
 }
 
+int MainWindow::EditDayreportToItem(DayReport* Dayreport,int Row)
+{
+    thisDataManage->EditData(Row,Dayreport);
 
+}
 
 int MainWindow::GetItemToDayreport(DayReport* Dayreport, int ItemIndex)
 {
@@ -123,12 +125,15 @@ int MainWindow::GetItemToDayreport(DayReport* Dayreport, int ItemIndex)
 int MainWindow::AddDayReport(int index)
 {
     uidayreport * uidayreport = new class uidayreport(index);
-//    uidayreport->SetSelectIndex(index);
+    DayReport* Dayreport = new DayReport();
+
+    //    uidayreport->SetSelectIndex(index);
     uidayreport->exec();        //栓塞等待选择完成
     if (uidayreport->GetStatus())
     {
-        DayReport * Dayreport = uidayreport->GetReport();
-        SetDayreportToItem(Dayreport,index);
+            Dayreport = uidayreport->GetReport();
+            SetDayreportToItem(Dayreport,index);
+
     }
 
     delete uidayreport;
@@ -149,7 +154,7 @@ int MainWindow::EditDayReport(int index)
     if (uidayreport->GetStatus())
     {
         DayReport * Dayreport = uidayreport->GetReport();
-        SetDayreportToItem(Dayreport,index);
+        EditDayreportToItem(Dayreport,index);
     }
     return 0;
 }

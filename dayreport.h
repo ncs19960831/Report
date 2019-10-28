@@ -52,6 +52,7 @@ public:
     bool SetEvaluate(QString string);
     bool GetEvaluate(QString* string);
 
+    QString GetDateTimeFormat();
 signals:
 
 protected:

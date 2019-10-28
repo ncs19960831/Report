@@ -46,11 +46,40 @@ uidayreport::uidayreport(DayReport * dayreport,int Index):
         thisDayReport = new DayReport(String);
     }
     ui->NameText->setText(String);
+
+    thisDayReport->GetProduct(&String);
+    ui->ProductText->setEditText(String);
+
+    thisDayReport->GetCase(&String);
+    ui->CaseText->setEditText(String);
+
+    thisDayReport->GetTarget(&String);
+    ui->TargetText->setText(String);
+
+    thisDayReport->GetProcess(&String);
+    ui->ProcessText->setPlainText(String);
+
+    thisDayReport->GetDiff(&String);
+    ui->DiffText->setPlainText(String);
+
+    thisDayReport->GetStartTime(&String);
+    ui->StartTimeText->setDateTime(QDateTime::fromString(String,thisDayReport->GetDateTimeFormat()));
+
+    thisDayReport->GetEndTime(&String);
+    ui->EndTimeText->setDateTime(QDateTime::fromString(String,thisDayReport->GetDateTimeFormat()));
+
+    thisDayReport->GetPriority(&String);
+    ui->PriorityText->setEditText(String);
+
+    thisDayReport->GetEvaluate(&String);
+    ui->EvaluateText->setEditText(String);
+
     ResetConnect();
 }
 
 uidayreport::~uidayreport()
 {
+    this->isFinish();
     delete ui;
 }
 
@@ -136,7 +165,14 @@ void uidayreport::Accept()
 {
     this->WriteOk = true;
     FinishReport();
+    this->hide();
+}
+
+
+void uidayreport::isFinish()
+{
     this->close();
+
 }
 
 void uidayreport::Reject()

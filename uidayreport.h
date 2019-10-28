@@ -30,6 +30,7 @@ public:
     void ResetConnect();
     QString SelfRead(QDateTimeEdit *DateTime);
 
+    void isFinish();
 private slots:
 
     void Accept();
