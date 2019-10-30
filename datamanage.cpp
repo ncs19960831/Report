@@ -244,6 +244,31 @@ void DataManage::EditData(int Row,DayReport* DayReport)
 }
 
 
+//尝试加入当前日志参数
+void DataManage::DelData(int Row)
+{
+    QString String,AddString;
+    QSqlTableModel* SqlTableModel = (QSqlTableModel*)thisTableView->model();
+    QSqlRecord SqlRecord = SqlTableModel->record(Row-1);
+
+    if (SqlRecord.isNull("ID"))
+    {
+        return;
+    }
+    if (SqlTableModel->rowCount() == Row)
+        Row--;
+    if(SqlTableModel->removeRow(Row))
+    {
+        Row = SqlTableModel->rowCount();
+        SqlTableModel->submitAll();
+    }
+    else
+    {
+        SqlTableModel->revertAll(); //如果不删除，则撤销
+    }
+
+}
+
 
 int DataManage::GetOneData(int Row, DayReport* DayReport)
 {

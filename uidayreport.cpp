@@ -138,7 +138,7 @@ QString uidayreport::SelfRead(QDateTimeEdit* DateTime)
         return *String;
     if (DateTime->dateTime().isNull())
         return *String;
-    *String = DateTime->dateTime().toString();
+    *String = DateTime->dateTime().toString(thisDayReport->GetDateTimeFormat());
     return *String;
 }
 

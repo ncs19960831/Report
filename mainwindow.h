@@ -32,6 +32,7 @@ public:
     int EditDayreportToItem(DayReport *Dayreport, int Row);
 private slots:
 
+    void AboutMsg();
     void on_pushButton_2_clicked();
 
     void on_FilterTableWidget_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);

@@ -20,6 +20,7 @@ public:
     void SetNewData(int Row, DayReport* DayReport);
     int GetOneData(int Row, DayReport *DayReport);
     void EditData(int Row, DayReport *DayReport);
+    void DelData(int Row);
 private:
     ~DataManage();
 };

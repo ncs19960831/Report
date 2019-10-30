@@ -8,6 +8,7 @@
 #include <QTableWidget>
 #include <QTableView>
 #include <ui_mainwindow.h>
+#include <QMessageBox>
 #include "datamanage.h"
  DataManage* thisDataManage ;
 
@@ -15,15 +16,21 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-
+    QAction* About = new QAction("关于");
     ui->setupUi(this);
+    ui->About->addAction(About);
+
+    QObject::connect(About,SIGNAL(triggered()),this,SLOT(AboutMeg()));
     this->InitMainTable();
     this->InitFilterTable();
 
 }
 
 
-
+void MainWindow::AboutMsg()
+{
+    QMessageBox::about(this,tr("版本信息"),tr("现在版本为0.0.01"));
+}
 
 int MainWindow::InitMainTable()
 {
@@ -142,6 +149,7 @@ int MainWindow::AddDayReport(int index)
 
 int MainWindow::DelDayReport(int index)
 {
+    thisDataManage->DelData(index);
     return 0;
 }
 
@@ -174,6 +182,7 @@ void MainWindow::on_pushButton_2_clicked()
         AddDayReport(index);
     }break;
     case 2:{        //del
+        index--;
         DelDayReport(index);
     }break;
     case 1:{        //modify
