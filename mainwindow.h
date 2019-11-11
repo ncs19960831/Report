@@ -37,6 +37,8 @@ private slots:
 
     void on_FilterTableWidget_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
 
+    void on_About_triggered();
+
 protected:
 private:
     Ui::MainWindow *ui;

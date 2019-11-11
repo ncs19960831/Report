@@ -21,6 +21,7 @@ public:
     int GetOneData(int Row, DayReport *DayReport);
     void EditData(int Row, DayReport *DayReport);
     void DelData(int Row);
+    void SortNumber();
 private:
     ~DataManage();
 };

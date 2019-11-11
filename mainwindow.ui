@@ -295,13 +295,13 @@
      <height>23</height>
     </rect>
    </property>
-   <widget class="QMenu" name="About">
+   <widget class="QMenu" name="Menu1">
     <property name="title">
      <string>菜单</string>
     </property>
-    <addaction name="actionAbout"/>
+    <addaction name="About"/>
    </widget>
-   <addaction name="About"/>
+   <addaction name="Menu1"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
@@ -314,9 +314,9 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <action name="actionAbout">
+  <action name="About">
    <property name="text">
-    <string>About</string>
+    <string>关于</string>
    </property>
   </action>
  </widget>

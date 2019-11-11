@@ -5,13 +5,14 @@
 #include <QSqlRecord>
 #include <QUuid>
 #include <QTableView>
+#include <QList>
 #include "dayreport.h"
 
-QSqlDatabase      thisSqlDataBase;
-QTableView*    thisTableView;
-QSqlIndex           thisSqlIndex;
-QSqlRecord thisSqlRecord;
-QSqlQuery thisSqlQuery;
+static QSqlDatabase      thisSqlDataBase;
+static QTableView*    thisTableView;
+static QSqlIndex           thisSqlIndex;
+static QSqlRecord thisSqlRecord;
+static QSqlQuery thisSqlQuery;
 
 
 bool DataManage::InitSqlDataBase(QTableView* SqlTable,
@@ -62,6 +63,7 @@ bool DataManage::InitSqlDataBase(QTableView* SqlTable,
         if(!(SqlQuery->exec(DayReportSql)))
             return false;
         thisSqlQuery = *SqlQuery;
+        thisSqlRecord = SqlQuery->record();
         static QList<QString> list;
         retSqlTableModel->setTable("DayReport");//选择数据表
         retSqlTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);//设置保存策略为手动提交
@@ -131,7 +133,19 @@ void DataManage::SaveDataBase(QString String)
 {
 
 }
+void DataManage::SortNumber()
+{
+    QSqlRecord SqlRecord = thisSqlRecord;
+    QSqlTableModel* SqlTableModel = (QSqlTableModel*)thisTableView->model();
+    for(int i = 0;i < SqlTableModel->rowCount();i++)
+    {
+        SqlRecord = SqlTableModel->record(i);
+        SqlRecord.setValue(1,QString(i+1+0x30));
+        SqlTableModel->setRecord(i,SqlRecord);
+    }
+    SqlTableModel->submitAll();
 
+}
 //尝试加入当前日志参数
 void DataManage::SetNewData(int Row,DayReport* DayReport)
 {

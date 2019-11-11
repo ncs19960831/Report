@@ -12,6 +12,9 @@ void uidayreport::ResetConnect()
     QObject::connect(ui->WriteButton,SIGNAL(accepted()),this,SLOT(Accept()));
     QObject::connect(ui->WriteButton_2,SIGNAL(accepted()),this,SLOT(Accept()));
     QObject::connect(ui->WriteButton_3,SIGNAL(accepted()),this,SLOT(Accept()));
+    QObject::connect(ui->WriteButton,SIGNAL(reject()),this,SLOT(Reject()));
+    QObject::connect(ui->WriteButton_2,SIGNAL(reject()),this,SLOT(Reject()));
+    QObject::connect(ui->WriteButton_3,SIGNAL(reject()),this,SLOT(Reject()));
 }
 
 void uidayreport::SetSelectIndex(int Index)
@@ -155,7 +158,7 @@ void uidayreport::FinishReport()
     thisDayReport->SetProcess(this->SelfRead(ui->ProcessText));
     //结束
     thisDayReport->SetEndTime(this->SelfRead(ui->EndTimeText));
-    thisDayReport->SetPriority(this->SelfRead(ui->ProductText));
+    thisDayReport->SetPriority(this->SelfRead(ui->PriorityText));
     thisDayReport->SetEvaluate(this->SelfRead(ui->TargetText));
     thisDayReport->SetDiff(this->SelfRead(ui->DiffText));
 

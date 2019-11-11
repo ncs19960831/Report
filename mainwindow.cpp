@@ -16,11 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    QAction* About = new QAction("关于");
     ui->setupUi(this);
-    ui->About->addAction(About);
 
-    QObject::connect(About,SIGNAL(triggered()),this,SLOT(AboutMeg()));
     this->InitMainTable();
     this->InitFilterTable();
 
@@ -191,6 +188,7 @@ void MainWindow::on_pushButton_2_clicked()
     default:
         break;
     }
+    thisDataManage->SortNumber();
 }
 
 MainWindow::~MainWindow()
@@ -203,4 +201,9 @@ void MainWindow::on_FilterTableWidget_currentCellChanged(int currentRow, int cur
 {
     MainWindow::UpdateFilterTable();
 
+}
+
+void MainWindow::on_About_triggered()
+{
+    this->AboutMsg();
 }
