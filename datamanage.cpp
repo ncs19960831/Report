@@ -13,7 +13,7 @@ static QTableView*    thisTableView;
 static QSqlIndex           thisSqlIndex;
 static QSqlRecord thisSqlRecord;
 static QSqlQuery thisSqlQuery;
-
+static QXlsx::Document* thisXlsxDocument;
 
 bool DataManage::InitSqlDataBase(QTableView* SqlTable,
                                  QString Database,
@@ -95,6 +95,7 @@ bool DataManage::InitSqlDataBase(QTableView* SqlTable,
         SqlTable->setModel(retSqlTableModel);
         thisTableView = SqlTable;
         thisSqlDataBase = MySqlDataBase;
+        thisXlsxDocument = new QXlsx::Document();
         return true;
     }
 }
@@ -129,8 +130,12 @@ DataManage::~DataManage()
 
 }
 
-void DataManage::SaveDataBase(QString String)
+void DataManage::SaveDataBase()
 {
+    QXlsx::Document* XlsxDocument;
+    XlsxDocument = thisXlsxDocument;
+    XlsxDocument->write(1,2,1111);
+    XlsxDocument->saveAs("a.xlsx");
 
 }
 void DataManage::SortNumber()

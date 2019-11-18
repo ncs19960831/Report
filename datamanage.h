@@ -7,7 +7,12 @@
 #include <QTableView>
 #include <QWidget>
 
-
+#include "xlsxdocument.h"
+#include "xlsxchartsheet.h"
+#include "xlsxcellrange.h"
+#include "xlsxchart.h"
+#include "xlsxrichstring.h"
+#include "xlsxworkbook.h"
 
 class DataManage
 {
@@ -16,7 +21,7 @@ public:
     QSqlQuery InitSqlDataBase(QSqlDatabase SqlDataBase);
     bool InitSqlDataBase(QTableView *SqlTable, QString Database, QString DatabaseName, QString HostName, QString UserName, QString PassWord, int port);
     DataManage(QTableView* SqlTable);
-    void SaveDataBase(QString String);
+    void SaveDataBase();
     void SetNewData(int Row, DayReport* DayReport);
     int GetOneData(int Row, DayReport *DayReport);
     void EditData(int Row, DayReport *DayReport);

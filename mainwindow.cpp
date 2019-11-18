@@ -207,3 +207,9 @@ void MainWindow::on_About_triggered()
 {
     this->AboutMsg();
 }
+
+void MainWindow::on_Report_clicked()
+{
+    DataManage* Datamanage = thisDataManage;
+    Datamanage->SaveDataBase();
+}

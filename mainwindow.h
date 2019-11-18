@@ -39,6 +39,8 @@ private slots:
 
     void on_About_triggered();
 
+    void on_Report_clicked();
+
 protected:
 private:
     Ui::MainWindow *ui;

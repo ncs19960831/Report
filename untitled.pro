@@ -4,6 +4,14 @@
 #
 #-------------------------------------------------
 
+
+# QXlsx code for Application Qt project
+QXLSX_PARENTPATH=./QXlsx/QXlsx/         # current QXlsx path is . (. means curret directory)
+QXLSX_HEADERPATH=./QXlsx/QXlsx/header/  # current QXlsx header path is ./header/
+QXLSX_SOURCEPATH=./QXlsx/QXlsx/source/  # current QXlsx source path is ./source/
+include(./QXlsx/QXlsx/QXlsx.pri)
+
+
 QT       += core gui
 QT       += sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
