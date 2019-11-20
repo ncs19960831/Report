@@ -6,6 +6,7 @@
 #include <QUuid>
 #include <QTableView>
 #include <QList>
+#include <QVariantList>
 #include "dayreport.h"
 
 static QSqlDatabase      thisSqlDataBase;
@@ -96,6 +97,12 @@ bool DataManage::InitSqlDataBase(QTableView* SqlTable,
         thisTableView = SqlTable;
         thisSqlDataBase = MySqlDataBase;
         thisXlsxDocument = new QXlsx::Document();
+        for (int i = 0;i<list.count();i++)
+        {
+            thisXlsxDocument->write(1,i+1,list.value(i));
+
+        }
+
         return true;
     }
 }
@@ -134,7 +141,23 @@ void DataManage::SaveDataBase()
 {
     QXlsx::Document* XlsxDocument;
     XlsxDocument = thisXlsxDocument;
-    XlsxDocument->write(1,2,1111);
+    QSqlRecord* SqlRecord = &thisSqlRecord;
+    QSqlTableModel* SqlTableModel = (QSqlTableModel*)thisTableView->model();
+
+
+    //取出所有数据，保存在无选项目录内。
+    for(int i = 0;i < SqlTableModel->rowCount();i++)
+    {
+        *SqlRecord = SqlTableModel->record(i);
+        for (int j = 0;j<SqlTableModel->columnCount();j++)
+        {
+            XlsxDocument->write(i+2,j+1,SqlRecord->value(j));   //去头
+        }
+
+    }
+
+
+    //todo
     XlsxDocument->saveAs("a.xlsx");
 
 }
