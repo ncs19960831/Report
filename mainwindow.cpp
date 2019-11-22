@@ -46,7 +46,7 @@ int MainWindow::UpdateFilterTable()
 {
     static QList<QString> list;
     QTableWidget* TableWidget = ui->FilterTableWidget;
-    QComboBox * Combox;
+    QComboBox * Combox = new QComboBox () ;
     list.clear();
     list<<"序号"<<"机型"<<"事项"<<"目标"<<"实际进行"<<"差异及改善"<<"开始时间"<<"结束时间"<<"权重"<<"评估";
     //遍历当前所有的按钮，发现已经设置的项目之后，将其删除掉。
@@ -64,15 +64,26 @@ int MainWindow::UpdateFilterTable()
     }
     //将整理完成的数据重新放置进入筛选窗口的空白筛选项
     QStringList *StringList = new QStringList(list);
+    QDateTimeEdit* DateTimeEdit = new QDateTimeEdit();
+
     for(int i = 0;i < TableWidget->rowCount();i++)
     {
         if (TableWidget->item(i,1) == nullptr)  //仅更新没有数据的窗口
         {
             if (TableWidget->currentRow() == i) //避免当前修改的单元格会被修改
+            {
+                Combox = (QComboBox*)TableWidget->cellWidget(i,0);
+                QString ssss = Combox->currentText();
+                if (Combox->currentText().indexOf("时间"))
+                {
+                    TableWidget->setCellWidget(i,1,DateTimeEdit);
+                }
                 continue;
+            }
             FilterCombox[i]->clear();
             FilterCombox[i]->addItems(*StringList);
             TableWidget->setCellWidget(i,0,FilterCombox[i]);
+
         }
     }
     delete StringList;
@@ -201,6 +212,20 @@ void MainWindow::on_FilterTableWidget_currentCellChanged(int currentRow, int cur
 {
     MainWindow::UpdateFilterTable();
 
+}
+
+
+QVariantMap MainWindow::GetFilterList()
+{
+    QTableWidget* TableWidget = ui->FilterTableWidget;
+    QVariantMap ret;
+    QString String = TableWidget->item(1,1)->text();
+    for (int i = 0;i<TableWidget->rowCount();i++)
+    {
+        String = TableWidget->item(i,1)->text();
+        QVariant Value = TableWidget->item(i,2)->text();
+    }
+//    ret.insert()
 }
 
 void MainWindow::on_About_triggered()

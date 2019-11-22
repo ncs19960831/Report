@@ -30,6 +30,7 @@ public:
     int UpdateFilterTable();
     int GetItemToDayreport(DayReport *Dayreport, int ItemIndex);
     int EditDayreportToItem(DayReport *Dayreport, int Row);
+    QVariantMap GetFilterList();
 private slots:
 
     void AboutMsg();
