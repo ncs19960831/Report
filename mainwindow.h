@@ -42,6 +42,8 @@ private slots:
 
     void on_Report_clicked();
 
+    void on_comboBox_currentTextChanged(const QString &arg1);
+
 protected:
 private:
     Ui::MainWindow *ui;

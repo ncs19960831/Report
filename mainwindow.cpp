@@ -5,6 +5,7 @@
 #include "mainwindow.h"
 #include <math.h>
 #include <QObject>
+#include <QDebug>
 #include <QTableWidget>
 #include <QTableView>
 #include <ui_mainwindow.h>
@@ -72,16 +73,21 @@ int MainWindow::UpdateFilterTable()
         {
             if (TableWidget->currentRow() == i) //避免当前修改的单元格会被修改
             {
-                Combox = (QComboBox*)TableWidget->cellWidget(i,0);
+                /*Combox = (QComboBox*)TableWidget->cellWidget(i,0);
                 QString ssss = Combox->currentText();
-                if (Combox->currentText().indexOf("时间"))
+                qDebug()<<ssss <<endl;
+                qDebug()<<Combox->currentText().indexOf("时间")<<endl;
+                if (Combox->currentText().indexOf("时间")>0)
                 {
                     TableWidget->setCellWidget(i,1,DateTimeEdit);
-                }
+                }*/
                 continue;
             }
+            Combox = (QComboBox*)TableWidget->cellWidget(i,0);
+            QObject::disconnect(Combox,SIGNAL(currentTextChange),this,SLOT(SwitchDateTime));
             FilterCombox[i]->clear();
             FilterCombox[i]->addItems(*StringList);
+            QObject::connect(FilterCombox[i],SIGNAL(currentTextChange),this,SLOT(SwitchDateTime));
             TableWidget->setCellWidget(i,0,FilterCombox[i]);
 
         }
