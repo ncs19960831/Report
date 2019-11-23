@@ -12,9 +12,9 @@ void uidayreport::ResetConnect()
     QObject::connect(ui->WriteButton,SIGNAL(accepted()),this,SLOT(Accept()));
     QObject::connect(ui->WriteButton_2,SIGNAL(accepted()),this,SLOT(Accept()));
     QObject::connect(ui->WriteButton_3,SIGNAL(accepted()),this,SLOT(Accept()));
-    QObject::connect(ui->WriteButton,SIGNAL(reject()),this,SLOT(Reject()));
-    QObject::connect(ui->WriteButton_2,SIGNAL(reject()),this,SLOT(Reject()));
-    QObject::connect(ui->WriteButton_3,SIGNAL(reject()),this,SLOT(Reject()));
+    QObject::connect(ui->WriteButton,SIGNAL(rejected()),this,SLOT(Reject()));
+    QObject::connect(ui->WriteButton_2,SIGNAL(rejected()),this,SLOT(Reject()));
+    QObject::connect(ui->WriteButton_3,SIGNAL(rejected()),this,SLOT(Reject()));
 }
 
 void uidayreport::SetSelectIndex(int Index)

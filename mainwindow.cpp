@@ -10,6 +10,7 @@
 #include <QTableView>
 #include <ui_mainwindow.h>
 #include <QMessageBox>
+#include <QComboBox>
 #include "datamanage.h"
  DataManage* thisDataManage ;
 
@@ -43,11 +44,37 @@ int MainWindow::InitMainTable()
     return 0;
 }
 
+void MainWindow::SwitchDateTime(const QString &text)
+{
+
+    QTableWidget* TableWidget = ui->FilterTableWidget;
+    QWidget* NormalWidget = new QWidget ();
+    int Row = TableWidget->currentRow();
+    qDebug()<< "TRIG Combox ";
+    QDateTimeEdit* DateTimeEdit = new QDateTimeEdit();
+    QTableWidgetItem* TableWidgetItem = TableWidget->currentItem();
+    QComboBox* Combox = (QComboBox*)TableWidget->cellWidget(Row,0);
+    QString ssss = Combox->currentText();
+    qDebug()<<ssss <<endl;
+    qDebug()<<Combox->currentText().indexOf("时间")<<endl;
+    if (Combox->currentText().indexOf("时间")>0)
+    {
+        TableWidget->setCellWidget(Row,1,DateTimeEdit);
+    }
+    else
+    {
+        TableWidget->setCellWidget(Row,1,NormalWidget);
+    }
+}
+
 int MainWindow::UpdateFilterTable()
 {
     static QList<QString> list;
     QTableWidget* TableWidget = ui->FilterTableWidget;
     QComboBox * Combox = new QComboBox () ;
+    QWidget* NormalWidget = new QWidget ();
+    QDateTimeEdit* DateTimeEdit = new QDateTimeEdit();
+
     list.clear();
     list<<"序号"<<"机型"<<"事项"<<"目标"<<"实际进行"<<"差异及改善"<<"开始时间"<<"结束时间"<<"权重"<<"评估";
     //遍历当前所有的按钮，发现已经设置的项目之后，将其删除掉。
@@ -65,7 +92,6 @@ int MainWindow::UpdateFilterTable()
     }
     //将整理完成的数据重新放置进入筛选窗口的空白筛选项
     QStringList *StringList = new QStringList(list);
-    QDateTimeEdit* DateTimeEdit = new QDateTimeEdit();
 
     for(int i = 0;i < TableWidget->rowCount();i++)
     {
@@ -81,14 +107,19 @@ int MainWindow::UpdateFilterTable()
                 {
                     TableWidget->setCellWidget(i,1,DateTimeEdit);
                 }*/
+
                 continue;
             }
             Combox = (QComboBox*)TableWidget->cellWidget(i,0);
-            QObject::disconnect(Combox,SIGNAL(currentTextChange),this,SLOT(SwitchDateTime));
-            FilterCombox[i]->clear();
-            FilterCombox[i]->addItems(*StringList);
-            QObject::connect(FilterCombox[i],SIGNAL(currentTextChange),this,SLOT(SwitchDateTime));
-            TableWidget->setCellWidget(i,0,FilterCombox[i]);
+            if (Combox->currentText().indexOf("时间")<0)
+            {
+                FilterCombox[i]->clear();
+                FilterCombox[i]->addItems(*StringList);
+
+                QObject::connect(FilterCombox[i],SIGNAL(currentTextChanged(const QString)),this,SLOT(SwitchDateTime(const QString)));
+                TableWidget->setCellWidget(i,0,FilterCombox[i]);
+
+            }
 
         }
     }
@@ -217,7 +248,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_FilterTableWidget_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn)
 {
     MainWindow::UpdateFilterTable();
-
+    qDebug()<<"trig";
 }
 
 

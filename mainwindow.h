@@ -34,6 +34,7 @@ public:
 private slots:
 
     void AboutMsg();
+
     void on_pushButton_2_clicked();
 
     void on_FilterTableWidget_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
@@ -42,9 +43,10 @@ private slots:
 
     void on_Report_clicked();
 
-    void on_comboBox_currentTextChanged(const QString &arg1);
+    void SwitchDateTime(const QString &text);
 
 protected:
+protected slots:
 private:
     Ui::MainWindow *ui;
     QComboBox * FilterCombox[10];
