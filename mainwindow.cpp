@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dayreport.h"
 #include "uidayreport.h"
@@ -48,23 +48,29 @@ void MainWindow::SwitchDateTime(const QString &text)
 {
 
     QTableWidget* TableWidget = ui->FilterTableWidget;
-    QWidget* NormalWidget = new QWidget ();
+    QLineEdit* NormalLineEdit = new QLineEdit();
     int Row = TableWidget->currentRow();
     qDebug()<< "TRIG Combox ";
     QDateTimeEdit* DateTimeEdit = new QDateTimeEdit();
     QTableWidgetItem* TableWidgetItem = TableWidget->currentItem();
     QComboBox* Combox = (QComboBox*)TableWidget->cellWidget(Row,0);
     QString ssss = Combox->currentText();
-    qDebug()<<ssss <<endl;
+    qDebug()<<ssss.toStdString().c_str() <<endl;
     qDebug()<<Combox->currentText().indexOf("时间")<<endl;
-    if (Combox->currentText().indexOf("时间")>0)
-    {
-        TableWidget->setCellWidget(Row,1,DateTimeEdit);
-    }
-    else
-    {
-        TableWidget->setCellWidget(Row,1,NormalWidget);
-    }
+    qDebug()<<TableWidget->columnCount()<<endl;
+    for (int i = 1; i < TableWidget->columnCount(); ++i) {
+
+        if (Combox->currentText().indexOf("时间")>0)
+        {
+            TableWidget->setCellWidget(Row,i,new QDateTimeEdit());
+        }
+        else if (TableWidget->item(Row,i) == nullptr || TableWidget->item(Row,i)->text() == "")
+        {
+            TableWidget->setItem(Row,i,TableWidgetItem);
+        }
+
+   }
+
 }
 
 int MainWindow::UpdateFilterTable()
@@ -99,27 +105,22 @@ int MainWindow::UpdateFilterTable()
         {
             if (TableWidget->currentRow() == i) //避免当前修改的单元格会被修改
             {
-                /*Combox = (QComboBox*)TableWidget->cellWidget(i,0);
-                QString ssss = Combox->currentText();
-                qDebug()<<ssss <<endl;
-                qDebug()<<Combox->currentText().indexOf("时间")<<endl;
-                if (Combox->currentText().indexOf("时间")>0)
-                {
-                    TableWidget->setCellWidget(i,1,DateTimeEdit);
-                }*/
-
                 continue;
             }
             Combox = (QComboBox*)TableWidget->cellWidget(i,0);
-            if (Combox->currentText().indexOf("时间")<0)
-            {
-                FilterCombox[i]->clear();
-                FilterCombox[i]->addItems(*StringList);
+            QString BakString = Combox->currentText();
 
-                QObject::connect(FilterCombox[i],SIGNAL(currentTextChanged(const QString)),this,SLOT(SwitchDateTime(const QString)));
-                TableWidget->setCellWidget(i,0,FilterCombox[i]);
 
-            }
+//            if (Combox->currentText().indexOf("时间")<0)
+//            {
+//                StringList->removeOne(BakString);
+//                FilterCombox[i]->clear();
+//                FilterCombox[i]->addItems(*StringList);
+//                QObject::connect(FilterCombox[i],SIGNAL(currentTextChanged(const QString)),this,SLOT(SwitchDateTime(const QString)));
+//                FilterCombox[i]->addItem(BakString);
+//                SwitchDateTime(BakString);
+//                TableWidget->setCellWidget(i,0,FilterCombox[i]);
+//            }
 
         }
     }
@@ -128,24 +129,25 @@ int MainWindow::UpdateFilterTable()
 
 int MainWindow::InitFilterTable()
 {
-    QStringList StringList;
-    StringList<<"筛选项目"<<"起始"<<"结束";
+    QStringList FilterTableStringList;
+    FilterTableStringList<<"筛选项目"<<"起始"<<"结束";
     QTableWidget* TableWidget = ui->FilterTableWidget;
+    QStringList StringList;
+    StringList<<"序号"<<"机型"<<"事项"<<"目标"<<"实际进行"<<"差异及改善"<<"开始时间"<<"结束时间"<<"权重"<<"评估";
     TableWidget->setColumnCount(StringList.count());
-    TableWidget->setRowCount(10);
-    TableWidget->setHorizontalHeaderLabels(StringList);
+    TableWidget->setRowCount(1);
+    TableWidget->setHorizontalHeaderLabels(FilterTableStringList);
 
     TableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);//整行选中的方式
 //    TableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);//禁止修改
     TableWidget->setSelectionMode(QAbstractItemView::SingleSelection);//可以选中单个
 
-    for(int i = 0;i < TableWidget->rowCount();i++)
-    {
 
-        FilterCombox[i] = new QComboBox();
-        FilterCombox[i]->addItems(QStringList()<<"序号"<<"机型"<<"事项"<<"目标"<<"实际进行"<<"差异及改善"<<"开始时间"<<"结束时间"<<"权重"<<"评估");
-        TableWidget->setCellWidget(i,0,FilterCombox[i]);
-    }
+        QComboBox* ComboBox = new QComboBox();
+        ComboBox->addItems(StringList);
+
+        FilterComboxStringList.append(&StringList);
+        TableWidget->setCellWidget(0,0,ComboBox);
 
     return 0;
 }
@@ -179,7 +181,6 @@ int MainWindow::AddDayReport(int index)
     uidayreport * uidayreport = new class uidayreport(index);
     DayReport* Dayreport = new DayReport();
 
-    //    uidayreport->SetSelectIndex(index);
     uidayreport->exec();        //栓塞等待选择完成
     if (uidayreport->GetStatus())
     {
@@ -245,24 +246,32 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::on_FilterTableWidget_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn)
-{
-    MainWindow::UpdateFilterTable();
-    qDebug()<<"trig";
-}
+
 
 
 QVariantMap MainWindow::GetFilterList()
 {
     QTableWidget* TableWidget = ui->FilterTableWidget;
     QVariantMap ret;
-    QString String = TableWidget->item(1,1)->text();
+    QComboBox * Combox;
+
     for (int i = 0;i<TableWidget->rowCount();i++)
     {
-        String = TableWidget->item(i,1)->text();
-        QVariant Value = TableWidget->item(i,2)->text();
+        if (TableWidget->item(i,1)  != nullptr)
+        {
+            if (TableWidget->item(i,1)->text() != "")
+            {
+                Combox = (QComboBox*)TableWidget->cellWidget(i,0);
+                QString String = Combox->currentText();
+                QVariant Value = TableWidget->item(i,1)->text();
+                ret.insert(String,Value);
+                qDebug()<<Value<<endl;
+            }
+        }
+
+
     }
-//    ret.insert()
+    return ret;
 }
 
 void MainWindow::on_About_triggered()
@@ -274,4 +283,13 @@ void MainWindow::on_Report_clicked()
 {
     DataManage* Datamanage = thisDataManage;
     Datamanage->SaveDataBase();
+}
+
+void MainWindow::on_FilterTableWidget_itemChanged(QTableWidgetItem *item)
+{
+
+//    MainWindow::UpdateFilterTable();
+    qDebug()<<"trig";
+//    this->GetFilterList();
+
 }

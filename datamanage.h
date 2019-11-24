@@ -5,6 +5,7 @@
 
 #include <QSqlQuery>
 #include <QTableView>
+#include <QTableWidget>
 #include <QWidget>
 
 #include "xlsxdocument.h"
@@ -27,6 +28,7 @@ public:
     void EditData(int Row, DayReport *DayReport);
     void DelData(int Row);
     void SortNumber();
+    void FilterData(QTableWidget *FilterTableWidget);
 private:
     ~DataManage();
 };

@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include "dayreport.h"
@@ -45,11 +45,13 @@ private slots:
 
     void SwitchDateTime(const QString &text);
 
+    void on_FilterTableWidget_itemChanged(QTableWidgetItem *item);
+
 protected:
 protected slots:
 private:
     Ui::MainWindow *ui;
-    QComboBox * FilterCombox[10];
+    QList< QStringList *> FilterComboxStringList;
 };
 
 #endif // MAINWINDOW_H

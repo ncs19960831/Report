@@ -7,6 +7,7 @@
 #include <QTableView>
 #include <QList>
 #include <QVariantList>
+#include <QTableWidget>
 #include "dayreport.h"
 
 static QSqlDatabase      thisSqlDataBase;
@@ -161,6 +162,12 @@ void DataManage::SaveDataBase()
     XlsxDocument->saveAs("a.xlsx");
 
 }
+
+void DataManage::FilterData(QTableWidget * FilterTableWidget)
+{
+
+}
+
 void DataManage::SortNumber()
 {
     QSqlRecord SqlRecord = thisSqlRecord;
