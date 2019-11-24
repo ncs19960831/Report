@@ -31,6 +31,9 @@ public:
     int GetItemToDayreport(DayReport *Dayreport, int ItemIndex);
     int EditDayreportToItem(DayReport *Dayreport, int Row);
     QVariantMap GetFilterList();
+    QStringList *SelectComboBoxText(QList<QString> list, QTableWidget *TableWidget);
+    bool ItemIsEmpty(QTableWidgetItem *TableWidgetItem);
+    QList<QString> UpdateDisplayComboList(QTableWidget *TableWidget);
 private slots:
 
     void AboutMsg();

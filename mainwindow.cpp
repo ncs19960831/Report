@@ -73,16 +73,11 @@ void MainWindow::SwitchDateTime(const QString &text)
 
 }
 
-int MainWindow::UpdateFilterTable()
-{
-    static QList<QString> list;
-    QTableWidget* TableWidget = ui->FilterTableWidget;
-    QComboBox * Combox = new QComboBox () ;
-    QWidget* NormalWidget = new QWidget ();
-    QDateTimeEdit* DateTimeEdit = new QDateTimeEdit();
 
-    list.clear();
-    list<<"序号"<<"机型"<<"事项"<<"目标"<<"实际进行"<<"差异及改善"<<"开始时间"<<"结束时间"<<"权重"<<"评估";
+QStringList * MainWindow::SelectComboBoxText(QList<QString> list,QTableWidget* TableWidget)
+{
+    QStringList * ret = new QStringList();
+    QComboBox * Combox = new QComboBox () ;
     //遍历当前所有的按钮，发现已经设置的项目之后，将其删除掉。
     for (int i = 0;i < TableWidget->rowCount();i++)
     {
@@ -94,47 +89,128 @@ int MainWindow::UpdateFilterTable()
             Combox = (QComboBox*)TableWidget->cellWidget(i,0);
             list.removeOne(Combox->currentText());
         }
-
     }
-    //将整理完成的数据重新放置进入筛选窗口的空白筛选项
-    QStringList *StringList = new QStringList(list);
+    ret->append(list);
+    return ret;
+}
+QList<QString> MainWindow::UpdateDisplayComboList(QTableWidget* TableWidget)
+{
+    //所有的数据-（列表内的数据∪显示的所有数据项） = 已经修改完成的数据项
+    //内部列表内数据∩显示的所有数据项 = 多余的被修改的数据项
+    QList<QString> DisplayList;
 
-    for(int i = 0;i < TableWidget->rowCount();i++)
+    QComboBox* Combox;
+    //显示的所有数据项
+    for (int i=0;i<TableWidget->rowCount();i++)
     {
-        if (TableWidget->item(i,1) == nullptr)  //仅更新没有数据的窗口
+        Combox = (QComboBox*)TableWidget->cellWidget(i,0);
+        DisplayList.append(Combox->currentText());
+    }
+    return DisplayList;
+}
+
+bool MainWindow::ItemIsEmpty(QTableWidgetItem* TableWidgetItem)
+{
+    bool isEmpty;
+    if (TableWidgetItem == nullptr)  //仅更新没有数据的窗口
+    {
+        if (TableWidgetItem->text() == "")
         {
-            if (TableWidget->currentRow() == i) //避免当前修改的单元格会被修改
-            {
-                continue;
-            }
-            Combox = (QComboBox*)TableWidget->cellWidget(i,0);
-            QString BakString = Combox->currentText();
-
-
-//            if (Combox->currentText().indexOf("时间")<0)
-//            {
-//                StringList->removeOne(BakString);
-//                FilterCombox[i]->clear();
-//                FilterCombox[i]->addItems(*StringList);
-//                QObject::connect(FilterCombox[i],SIGNAL(currentTextChanged(const QString)),this,SLOT(SwitchDateTime(const QString)));
-//                FilterCombox[i]->addItem(BakString);
-//                SwitchDateTime(BakString);
-//                TableWidget->setCellWidget(i,0,FilterCombox[i]);
-//            }
-
+            isEmpty = true;
+        }
+        else
+        {
+            isEmpty = false;
         }
     }
-    delete StringList;
+    else
+    {
+        isEmpty = false;
+    }
+    return isEmpty;
+}
+
+int MainWindow::UpdateFilterTable()
+{
+    static QList<QString> list;
+    QTableWidget* TableWidget = ui->FilterTableWidget;
+    QComboBox * Combox = new QComboBox () ;
+    QWidget* NormalWidget = new QWidget ();
+    QDateTimeEdit* DateTimeEdit = new QDateTimeEdit();
+    int SelectRow,MaxRow;
+    list.clear();
+    list<<"序号"<<"机型"<<"事项"<<"目标"<<"实际进行"<<"差异及改善"<<"权重"<<"评估";
+
+    SelectRow = TableWidget->currentRow();
+    MaxRow = TableWidget->rowCount();
+
+    //将整理完成的数据重新放置进入筛选窗口的空白筛选项
+    QStringList *StringList = this->SelectComboBoxText(list,TableWidget);
+
+    if (!this->ItemIsEmpty(TableWidget->item(TableWidget->rowCount()-1,1)) && !ItemIsEmpty(TableWidget->item(TableWidget->currentRow(),1)))  //仅更新没有数据的窗口
+    {
+
+        Combox->addItems(*StringList);
+        qDebug()<<"Select"<<SelectRow<<"Max"<< MaxRow;
+        //限制最大项
+        if(TableWidget->currentRow() == (TableWidget->rowCount() - 1))
+        {
+            if (TableWidget->rowCount() <=list.count())
+            {
+                TableWidget->insertRow(MaxRow);
+                TableWidget->setCellWidget(MaxRow,0,Combox);
+            }
+        }
+
+    }
+    else
+    {
+        TableWidget->removeRow(MaxRow);
+    }
+    QStringList NewList = this->UpdateDisplayComboList(TableWidget);
+
+    QString AddString;
+    QString DelString;
+    //如果是修改了中间的一项，就把其他的项目给增加
+    for (int i = 0;i<NewList.count();i++)
+    {
+        if (!StringList->removeOne(NewList.value(i)))
+        {
+            AddString = NewList.value(i);
+            DelString = StringList->value(i);
+        }
+        else
+        {
+            NewList.removeAt(i);
+        }
+    }
+    if (AddString.isNull()
+            && AddString.isEmpty()
+            && DelString.isNull()
+            && DelString.isEmpty())
+    {
+        for (int i = 0; i < TableWidget->rowCount(); ++i)
+        {
+            Combox = (QComboBox *)TableWidget->item(i,0);
+            Combox->addItem(AddString);
+            Combox->removeItem(Combox->findText(DelString));
+        }
+
+    }
+
+
+// delete StringList;
 }
 
 int MainWindow::InitFilterTable()
 {
     QStringList FilterTableStringList;
-    FilterTableStringList<<"筛选项目"<<"起始"<<"结束";
+//    FilterTableStringList<<"筛选项目"<<"起始"<<"结束";
+    FilterTableStringList<<"筛选项目"<<"数据";
     QTableWidget* TableWidget = ui->FilterTableWidget;
     QStringList StringList;
     StringList<<"序号"<<"机型"<<"事项"<<"目标"<<"实际进行"<<"差异及改善"<<"开始时间"<<"结束时间"<<"权重"<<"评估";
-    TableWidget->setColumnCount(StringList.count());
+    TableWidget->setColumnCount(FilterTableStringList.count());
     TableWidget->setRowCount(1);
     TableWidget->setHorizontalHeaderLabels(FilterTableStringList);
 
@@ -288,7 +364,7 @@ void MainWindow::on_Report_clicked()
 void MainWindow::on_FilterTableWidget_itemChanged(QTableWidgetItem *item)
 {
 
-//    MainWindow::UpdateFilterTable();
+    MainWindow::UpdateFilterTable();
     qDebug()<<"trig";
 //    this->GetFilterList();
 
