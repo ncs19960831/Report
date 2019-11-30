@@ -112,20 +112,20 @@ QList<QString> MainWindow::UpdateDisplayComboList(QTableWidget* TableWidget)
 bool MainWindow::ItemIsEmpty(QTableWidgetItem* TableWidgetItem)
 {
     bool isEmpty;
-    if (TableWidgetItem == nullptr)  //仅更新没有数据的窗口
+    if (TableWidgetItem != nullptr)  //仅更新没有数据的窗口
     {
-        if (TableWidgetItem->text() == "")
+        if (TableWidgetItem->text() != "")
         {
-            isEmpty = true;
+            isEmpty = false;
         }
         else
         {
-            isEmpty = false;
+            isEmpty = true;
         }
     }
     else
     {
-        isEmpty = false;
+        isEmpty = true;
     }
     return isEmpty;
 }
@@ -165,6 +165,10 @@ int MainWindow::UpdateFilterTable()
     }
     else
     {
+        if (ItemIsEmpty(TableWidget->item(TableWidget->currentRow(),1)))
+        {
+             TableWidget->removeRow(SelectRow);
+        }
         TableWidget->removeRow(MaxRow);
     }
     QStringList NewList = this->UpdateDisplayComboList(TableWidget);
@@ -172,31 +176,8 @@ int MainWindow::UpdateFilterTable()
     QString AddString;
     QString DelString;
     //如果是修改了中间的一项，就把其他的项目给增加
-    for (int i = 0;i<NewList.count();i++)
-    {
-        if (!StringList->removeOne(NewList.value(i)))
-        {
-            AddString = NewList.value(i);
-            DelString = StringList->value(i);
-        }
-        else
-        {
-            NewList.removeAt(i);
-        }
-    }
-    if (AddString.isNull()
-            && AddString.isEmpty()
-            && DelString.isNull()
-            && DelString.isEmpty())
-    {
-        for (int i = 0; i < TableWidget->rowCount(); ++i)
-        {
-            Combox = (QComboBox *)TableWidget->item(i,0);
-            Combox->addItem(AddString);
-            Combox->removeItem(Combox->findText(DelString));
-        }
 
-    }
+
 
 
 // delete StringList;
