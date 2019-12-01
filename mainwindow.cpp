@@ -72,14 +72,33 @@ void MainWindow::SwitchDateTime(const QString &text)
    }
 
 }
+//获取当前隐藏的过滤数据
+QStringList * MainWindow::GetComboBoxShadowText(QList<QString> list,QTableWidget* TableWidget)
+{
+    QStringList * ret = new QStringList();
+    QComboBox * Combox = new QComboBox () ;
+    //遍历当前所有的按钮，发现已经设置的项目之后，将其删除掉。
+    qDebug()<<TableWidget->rowCount()<<endl;
+    for (int i=0;i<TableWidget->rowCount();i++)
+    {
 
+            //提取当前的下拉菜单，然后删除当前的选项
+            Combox = (QComboBox*)TableWidget->cellWidget(i,0);
+            qDebug()<<i<<" text: "<<Combox->currentText()<<endl;
+            list.removeOne(Combox->currentText());
 
+    }
+    ret->append(list);
+    return ret;
+}
+//获取当前隐藏的过滤数据
 QStringList * MainWindow::SelectComboBoxText(QList<QString> list,QTableWidget* TableWidget)
 {
     QStringList * ret = new QStringList();
     QComboBox * Combox = new QComboBox () ;
     //遍历当前所有的按钮，发现已经设置的项目之后，将其删除掉。
-    for (int i = 0;i < TableWidget->rowCount();i++)
+    qDebug()<<TableWidget->rowCount()<<endl;
+    for (int i=0;i<TableWidget->rowCount();i++)
     {
         if ((TableWidget->item(i,1) != nullptr))
         {
@@ -87,13 +106,15 @@ QStringList * MainWindow::SelectComboBoxText(QList<QString> list,QTableWidget* T
                 continue;
             //提取当前的下拉菜单，然后删除当前的选项
             Combox = (QComboBox*)TableWidget->cellWidget(i,0);
+            qDebug()<<i<<" text: "<<Combox->currentText()<<endl;
             list.removeOne(Combox->currentText());
         }
     }
     ret->append(list);
     return ret;
 }
-QList<QString> MainWindow::UpdateDisplayComboList(QTableWidget* TableWidget)
+//获取当前显示的过滤数据
+QList<QString> MainWindow::GetDisplayComboList(QTableWidget* TableWidget)
 {
     //所有的数据-（列表内的数据∪显示的所有数据项） = 已经修改完成的数据项
     //内部列表内数据∩显示的所有数据项 = 多余的被修改的数据项
@@ -130,6 +151,20 @@ bool MainWindow::ItemIsEmpty(QTableWidgetItem* TableWidgetItem)
     return isEmpty;
 }
 
+void MainWindow::CheckComboBoxList(QComboBox* ComboBox, QStringList* Add,QStringList * Del)
+{
+    QStringList* AddList = new QStringList(*Add);   //Display
+    QStringList* DelList = new QStringList(*Del);   //Shadow
+    int MaxCount = ComboBox->count();
+    int SelectCount = ComboBox->currentIndex();
+    //清空数据
+    for (int i = MaxCount;i>0;i--)
+    {
+        ComboBox->removeItem(i);
+    }
+    ComboBox->addItems(*DelList);
+
+}
 int MainWindow::UpdateFilterTable()
 {
     static QList<QString> list;
@@ -165,17 +200,27 @@ int MainWindow::UpdateFilterTable()
     }
     else
     {
-        if (ItemIsEmpty(TableWidget->item(TableWidget->currentRow(),1)))
+        if (TableWidget->rowCount()>1)
         {
-             TableWidget->removeRow(SelectRow);
+            if (ItemIsEmpty(TableWidget->item(TableWidget->currentRow(),1)))
+            {
+                 TableWidget->removeRow(SelectRow);
+            }
+            TableWidget->removeRow(MaxRow);
         }
-        TableWidget->removeRow(MaxRow);
-    }
-    QStringList NewList = this->UpdateDisplayComboList(TableWidget);
 
-    QString AddString;
-    QString DelString;
-    //如果是修改了中间的一项，就把其他的项目给增加
+    }
+    //全部修改，根据当前的更新项修改相关的数据参数
+    QStringList NewList = this->GetDisplayComboList(TableWidget);
+    QStringList* ShadowList = this->GetComboBoxShadowText(list,TableWidget);
+
+    for (int i = 0;i<TableWidget->rowCount();i++)
+    {
+        Combox = (QComboBox*)TableWidget->cellWidget(i,0);
+        this->CheckComboBoxList(Combox,&NewList,ShadowList);
+    }
+
+
 
 
 

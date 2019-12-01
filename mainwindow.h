@@ -33,7 +33,9 @@ public:
     QVariantMap GetFilterList();
     QStringList *SelectComboBoxText(QList<QString> list, QTableWidget *TableWidget);
     bool ItemIsEmpty(QTableWidgetItem *TableWidgetItem);
-    QList<QString> UpdateDisplayComboList(QTableWidget *TableWidget);
+    void CheckComboBoxList(QComboBox *ComboBox, QStringList *Add, QStringList *Del);
+    QList<QString> GetDisplayComboList(QTableWidget *TableWidget);
+    QStringList *GetComboBoxShadowText(QList<QString> list, QTableWidget *TableWidget);
 private slots:
 
     void AboutMsg();
